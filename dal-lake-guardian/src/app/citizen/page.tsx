@@ -80,6 +80,36 @@ export default function CitizenPortal() {
   const [submitting,  setSubmitting]  = useState(false);
   const [submitted,   setSubmitted]   = useState(false);
   const [submittedId, setSubmittedId] = useState("");
+  const [myReports,   setMyReports]   = useState<any[]>(MY_REPORTS);
+  const [expandedReport, setExpandedReport] = useState<string | null>(null);
+
+  useEffect(() => {
+    const checkCustom = () => {
+      const custom = JSON.parse(localStorage.getItem("dal-custom-complaints") || "[]");
+      if (custom.length > 0) {
+        const mappedCustom = custom.map((c: any) => ({
+          id: c.id,
+          cat: c.cat,
+          status: c.status,
+          date: "Just Now",
+          area: c.area,
+          pts: 10,
+          healthDelta: null,
+          geo: true,
+          photoData: c.photoData || c.image_url,
+          lat: c.lat,
+          lon: c.lon,
+          desc: c.explanation
+        }));
+        setMyReports([...mappedCustom, ...MY_REPORTS]);
+      } else {
+        setMyReports(MY_REPORTS);
+      }
+    };
+    checkCustom();
+    const interval = setInterval(checkCustom, 2000);
+    return () => clearInterval(interval);
+  }, []);
 
   // Camera state
   const [cameraOpen,   setCameraOpen]   = useState(false);
@@ -218,7 +248,8 @@ export default function CitizenPortal() {
       time: "Just Now",
       confidence: 0.91,
       explanation: `${category} reported by citizen at [${location.lat.toFixed(4)}, ${location.lon.toFixed(4)}]. ${description || "No description provided."}`,
-      priorityScore: 0.91
+      priorityScore: 0.91,
+      photoData: photoPreview
     };
     custom.unshift(newReport);
     localStorage.setItem("dal-custom-complaints", JSON.stringify(custom));
@@ -226,7 +257,7 @@ export default function CitizenPortal() {
     setSubmittedId(newId);
     setSubmitting(false);
     setSubmitted(true);
-  }, [category, photoFile, location, description]);
+  }, [category, photoFile, location, description, photoPreview]);
 
   const resetForm = () => {
     setCategory(""); setDescription(""); setPhotoFile(null);
@@ -543,40 +574,81 @@ export default function CitizenPortal() {
                 <p style={{ fontSize: 12, color: "var(--text-muted)", marginTop: 4 }}>Track the status of your submitted reports and their impact</p>
               </div>
               <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-                {MY_REPORTS.map((r) => {
+                {myReports.map((r) => {
                   const cfg = STATUS_CFG[r.status] ?? { label: r.status, cls: "badge-muted" };
+                  const isExpanded = expandedReport === r.id;
+                  const imgUrl = r.photoData || (
+                    r.id === "DLG-1034" ? "/cctv/citizen-DLG-1034.png" :
+                    r.id === "DLG-1021" ? "/cctv/citizen-DLG-1033.png" :
+                    r.id === "DLG-1008" ? "/cctv/citizen-DLG-1032.png" :
+                    r.id === "DLG-0981" ? "/cctv/citizen-DLG-1031.png" :
+                    "/cctv/citizen-default.png"
+                  );
                   return (
                     <div
                       key={r.id}
                       className="glass-panel"
-                      style={{ padding: 18, display: "flex", alignItems: "center", gap: 16, borderLeft: `3px solid ${r.status === "resolved" ? "#10B981" : r.status === "rejected" ? "#EF4444" : "#0EA5E9"}` }}
+                      onClick={() => setExpandedReport(isExpanded ? null : r.id)}
+                      style={{
+                        padding: 18, display: "flex", flexDirection: "column", gap: 12,
+                        borderLeft: `4px solid ${r.status === "resolved" ? "#10B981" : r.status === "rejected" ? "#EF4444" : "#0EA5E9"}`,
+                        cursor: "pointer", transition: "all 0.2s"
+                      }}
                     >
-                      <div style={{ flex: 1 }}>
-                        <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4, flexWrap: "wrap" }}>
-                          <span style={{ fontFamily: "var(--font-mono)", fontSize: 12, color: "var(--text-muted)" }}>{r.id}</span>
-                          <span style={{ fontWeight: 600, fontSize: 14 }}>{r.cat}</span>
-                          <span className={`badge ${cfg.cls}`}>{cfg.label}</span>
-                          {r.geo && <span className="badge badge-teal" style={{ fontSize: "0.55rem" }}>🛡️ Geo-Verified</span>}
-                        </div>
-                        <div style={{ fontSize: 11, color: "var(--text-muted)" }}>
-                          {r.area} · {r.date}
-                          {r.rejectReason && (
-                            <span style={{ color: "#EF4444", marginLeft: 8 }}>— {r.rejectReason}</span>
+                      <div style={{ display: "flex", alignItems: "center", justifyItems: "space-between", gap: 16 }}>
+                        <div style={{ flex: 1 }}>
+                          <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4, flexWrap: "wrap" }}>
+                            <span style={{ fontFamily: "var(--font-mono)", fontSize: 12, color: "var(--text-muted)" }}>{r.id}</span>
+                            <span style={{ fontWeight: 600, fontSize: 14 }}>{r.cat}</span>
+                            <span className={`badge ${cfg.cls}`}>{cfg.label}</span>
+                            {r.geo && <span className="badge badge-teal" style={{ fontSize: "0.55rem" }}>🛡️ Geo-Verified</span>}
+                          </div>
+                          <div style={{ fontSize: 11, color: "var(--text-muted)" }}>
+                            {r.area} · {r.date}
+                            {r.rejectReason && (
+                              <span style={{ color: "#EF4444", marginLeft: 8 }}>— {r.rejectReason}</span>
+                            )}
+                          </div>
+                          {r.healthDelta && r.status === "resolved" && (
+                            <div style={{ fontSize: 11, color: "#10B981", marginTop: 4, display: "flex", alignItems: "center", gap: 4 }}>
+                              <TrendingUp size={11} />
+                              Sector health improved by {r.healthDelta} points after cleanup
+                            </div>
                           )}
                         </div>
-                        {r.healthDelta && r.status === "resolved" && (
-                          <div style={{ fontSize: 11, color: "#10B981", marginTop: 4, display: "flex", alignItems: "center", gap: 4 }}>
-                            <TrendingUp size={11} />
-                            Sector health improved by {r.healthDelta} points after cleanup
+                        <div style={{ textAlign: "right", flexShrink: 0 }}>
+                          <div style={{ fontSize: 11, fontFamily: "var(--font-mono)", color: "var(--text-muted)", marginBottom: 2 }}>Eco Points</div>
+                          <div style={{ fontSize: 20, fontWeight: 700, fontFamily: "var(--font-mono)", color: r.pts >= 0 ? "#F59E0B" : "#EF4444" }}>
+                            {r.pts >= 0 ? "+" : ""}{r.pts}
                           </div>
-                        )}
-                      </div>
-                      <div style={{ textAlign: "right", flexShrink: 0 }}>
-                        <div style={{ fontSize: 11, fontFamily: "var(--font-mono)", color: "var(--text-muted)", marginBottom: 2 }}>Eco Points</div>
-                        <div style={{ fontSize: 20, fontWeight: 700, fontFamily: "var(--font-mono)", color: r.pts >= 0 ? "#F59E0B" : "#EF4444" }}>
-                          {r.pts >= 0 ? "+" : ""}{r.pts}
                         </div>
                       </div>
+
+                      {/* Expandable detailed ticket view (showing clicked photo and parameters) */}
+                      {isExpanded && (
+                        <div className="animate-scale-in" style={{ borderTop: "1px solid var(--border-dim)", paddingTop: 14, display: "flex", flexDirection: "column", gap: 12 }} onClick={(e) => e.stopPropagation()}>
+                          <div style={{ height: 220, width: "100%", background: "#060A0F", borderRadius: 8, overflow: "hidden", border: "1px solid var(--border-soft)", position: "relative" }}>
+                            <img
+                              src={imgUrl}
+                              alt={r.cat}
+                              style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                            />
+                            <div style={{ position: "absolute", bottom: 10, right: 10, background: "rgba(0,0,0,0.65)", color: "#fff", padding: "4px 8px", borderRadius: 4, fontSize: 9, fontFamily: "var(--font-mono)" }}>
+                              📍 {r.lat ? `${r.lat.toFixed(4)}°N, ${r.lon.toFixed(4)}°E` : "Dal Lake Basin"}
+                            </div>
+                          </div>
+                          <div style={{ fontSize: 11.5, lineHeight: 1.5, color: "var(--text-secondary)" }}>
+                            <strong style={{ color: "var(--text-primary)" }}>Citizen Caption:</strong>{" "}
+                            {r.desc || (
+                              r.id === "DLG-1034" ? "Severe algal bloom and weed canopy observed near Hazratbal NW shore. Needs urgent harvesting." :
+                              r.id === "DLG-1021" ? "Oil slick from tourist houseboats spreading near Boulevard shore. Iridescent sheen visible." :
+                              r.id === "DLG-1008" ? "Active raw sewage discharge and plastic bag accumulation near Rainawari residential canals." :
+                              r.id === "DLG-0981" ? "Non-local photo submitted outside monitored parameters (GPS mismatch)." :
+                              "No further description provided."
+                            )}
+                          </div>
+                        </div>
+                      )}
                     </div>
                   );
                 })}
