@@ -121,9 +121,22 @@ COMPLAINTS   = generate_complaints(60)
 
 # ─── Core Routes ───────────────────────────────────────────────────────────
 
+@app.route("/")
+def home():
+    return jsonify({
+        "status": "online",
+        "name": "Dal360 Environmental Intelligence API",
+        "endpoints": {
+            "health": "/api/health",
+            "stations": "/api/stations",
+            "complaints": "/api/complaints",
+            "heatmap": "/api/heatmap"
+        }
+    })
+
 @app.route("/api/health")
 def health_check():
-    return jsonify({"status": "ok", "service": "Dal Lake Guardian API v2.0", "timestamp": datetime.now().isoformat()})
+    return jsonify({"status": "ok", "service": "Dal360 API v2.0", "timestamp": datetime.now().isoformat()})
 
 @app.route("/api/stations")
 def get_stations():
