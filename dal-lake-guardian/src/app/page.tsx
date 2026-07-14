@@ -189,7 +189,7 @@ export default function LandingPage() {
 
           <p style={{ fontSize: 17.5, color: "var(--text-secondary)", maxWidth: 680, margin: "0 auto 48px", lineHeight: 1.8 }}>
             A full-fledged digital twin using XGBoost health prediction, LightGBM risk forecasting,
-            Sentinel-2 satellite intelligence, and Gemini Vision ML — not just a dashboard.
+            Sentinel-2 satellite intelligence, and computer vision validation — not just a dashboard.
           </p>
 
           {/* Live Lake Health Score */}
