@@ -20,7 +20,7 @@ export const DAL_BOUNDS = {
   center: { lat: (tempMinLat + tempMaxLat) / 2, lon: (tempMinLon + tempMaxLon) / 2 },
 };
 
-// ─── 5 LAWDA Admin Stations (Real Dal Lake Locations) ───────────────────────
+// ─── 5 LCMA Admin Stations (Real Dal Lake Locations) ───────────────────────
 // Distributed as 4 sectors/basins + 1 Central HQ Station at Char Chinari
 //  1. Hazratbal   - NW Basin (North part)
 //  2. Nishat      - NE Basin (East part)
@@ -334,7 +334,7 @@ export const CAUSAL_CHAINS: Record<string, string[]> = {
 
 export const WORKER_ROLES = [
   "Boat Operator",
-  "LAWDA Crew",
+  "LCMA Crew",
   "Lead Inspector",
   "Volunteer",
   "Municipal Worker",

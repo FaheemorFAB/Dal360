@@ -3,11 +3,15 @@
 @plugin "daisyui" {
   themes: all;
 }
+@theme {
+  --font-sans: "Space Grotesk", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", "Fira Code", monospace;
+}
 
 
 /* ═══════════════════════════════════════════════════════════════
    DAL LAKE GUARDIAN — DESIGN SYSTEM v2.0
-   Environmental Intelligence Platform · LAWDA
+   Environmental Intelligence Platform · LCMA
    ═══════════════════════════════════════════════════════════════ */
 
 :root {

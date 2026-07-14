@@ -295,7 +295,7 @@ export default function DalLakeCesiumTwin({ simulatedSectors, timeSliderIndex = 
       });
     }).catch((e: any) => console.log("Cesium Pollution load error:", e));
 
-    // 3. Load 5 LAWDA Stations
+    // 3. Load 5 LCMA Stations
     STATIONS.forEach((sta) => {
       const isHQ = sta.id === "STA-LD";
       viewer.entities.add({

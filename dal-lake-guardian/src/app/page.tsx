@@ -37,7 +37,7 @@ const ROLES = [
   {
     id:          "admin",
     label:       "Command Centre",
-    tagline:     "LAWDA Admin",
+    tagline:     "LCMA Admin",
     Icon:        ShieldAlert,
     description: "Full environmental intelligence: predictive health scores, risk forecasting, simulation lab, and accountability tools.",
     features:    ["XGBoost Health Score", "7-Day Risk Forecast", "Simulation Lab", "Culprit Tracking"],
@@ -179,7 +179,7 @@ export default function LandingPage() {
             }}
           >
             <Activity size={12} />
-            LAWDA · Digital Twin Operations · v2.0
+            LCMA · Digital Twin Operations · v2.0
           </div>
 
           <h1
@@ -359,7 +359,7 @@ export default function LandingPage() {
           letterSpacing: "0.06em",
         }}
       >
-        <span>LAWDA DIGITAL TWIN OPS · v2.0 · KASHMIR</span>
+        <span>LCMA DIGITAL TWIN OPS · v2.0 · KASHMIR</span>
         <div style={{ display: "flex", gap: 16, alignItems: "center" }}>
           {["XGBoost Health", "LightGBM Forecast", "Sentinel-2 Sat", "Gemini Vision"].map((s) => (
             <span key={s} style={{ display: "flex", alignItems: "center", gap: 4 }}>

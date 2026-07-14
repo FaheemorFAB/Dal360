@@ -175,14 +175,37 @@ export default function DalLakeMapInner({
     cameras:       showCameras,
   });
   const [selected, setSelected] = useState<string | null>(null);
+  const [activeIncidents, setActiveIncidents] = useState<any[]>(INCIDENTS);
 
   // Sync dark/light from html.light class
   useEffect(() => {
+    const checkCustom = () => {
+      const custom = JSON.parse(localStorage.getItem("dal-custom-complaints") || "[]");
+      if (custom.length > 0) {
+        const customIncidents = custom.map((c: any) => ({
+          lat: c.lat,
+          lng: c.lon,
+          sev: c.severity,
+          cat: c.cat,
+          id: c.id
+        }));
+        setActiveIncidents([...customIncidents, ...INCIDENTS]);
+      } else {
+        setActiveIncidents(INCIDENTS);
+      }
+    };
+    checkCustom();
+    const interval = setInterval(checkCustom, 2000);
+
     const check = () => setIsDark(!document.documentElement.classList.contains("light"));
     check();
     const obs = new MutationObserver(check);
     obs.observe(document.documentElement, { attributes: true, attributeFilter: ["class"] });
-    return () => obs.disconnect();
+
+    return () => {
+      clearInterval(interval);
+      obs.disconnect();
+    };
   }, []);
 
   const toggleLayer = useCallback(
@@ -350,7 +373,7 @@ export default function DalLakeMapInner({
         })}
 
         {/* ── Algae Bloom Heatmap ──────────────────────── */}
-        {layers.algaeHeatmap && (simulatedAlgaePoints || INCIDENTS.filter(i => i.cat === "Algae Bloom")).map((pt: any, i) => {
+        {layers.algaeHeatmap && (simulatedAlgaePoints || activeIncidents.filter(i => i.cat === "Algae Bloom")).map((pt: any, i) => {
           const lat = pt.lat !== undefined ? pt.lat : pt[0];
           const lng = pt.lng !== undefined ? pt.lng : pt[1];
           return (
@@ -368,7 +391,7 @@ export default function DalLakeMapInner({
         })}
 
         {/* ── Weed Invasion Heatmap ────────────────────── */}
-        {layers.weedHeatmap && (simulatedWeedPoints || INCIDENTS.filter(i => i.cat === "Water Hyacinth")).map((pt: any, i) => {
+        {layers.weedHeatmap && (simulatedWeedPoints || activeIncidents.filter(i => i.cat === "Water Hyacinth")).map((pt: any, i) => {
           const lat = pt.lat !== undefined ? pt.lat : pt[0];
           const lng = pt.lng !== undefined ? pt.lng : pt[1];
           return (
@@ -386,7 +409,7 @@ export default function DalLakeMapInner({
         })}
 
         {/* ── Incident Hotspots (Shaded Outbreaks) ────────── */}
-        {layers.complaints && INCIDENTS.map((inc, i) => (
+        {layers.complaints && activeIncidents.map((inc, i) => (
           <Circle
             key={`c${i}`}
             center={[inc.lat, inc.lng]}

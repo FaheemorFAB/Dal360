@@ -37,7 +37,7 @@ const ROLE_CONFIG = {
   },
   admin: {
     label:  "Command Centre",
-    badge:  "LAWDA Admin",
+    badge:  "LCMA Admin",
     color:  "#8B5CF6",
     bg:     "rgba(139,92,246,0.08)",
     border: "rgba(139,92,246,0.2)",
@@ -162,7 +162,7 @@ export default function SideNav({ role, items, activeSection, onSectionChange, s
                 Dal360
               </div>
               <div style={{ fontSize: 8, color: "var(--text-muted)", letterSpacing: "0.06em", textTransform: "uppercase", fontFamily: "var(--font-mono)" }}>
-                LAWDA · Digital Twin
+                LCMA · Digital Twin
               </div>
             </div>
           </div>

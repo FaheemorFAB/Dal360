@@ -57,7 +57,7 @@ const COMPLAINTS = [
 
 const WORKERS = [
   { id: "W01", name: "Abdul Rashid",  role: "Boat Operator",  station: "STA-HAZ", status: "active",  tasks: 2, lat: 34.1280, lon: 74.8420, score: 91, flags: 0, suspended: false },
-  { id: "W02", name: "Farooq Ahmed",  role: "LAWDA Crew",     station: "STA-GB",  status: "active",  tasks: 1, lat: 34.0790, lon: 74.8520, score: 87, flags: 0, suspended: false },
+  { id: "W02", name: "Farooq Ahmed",  role: "LCMA Crew",     station: "STA-GB",  status: "active",  tasks: 1, lat: 34.0790, lon: 74.8520, score: 87, flags: 0, suspended: false },
   { id: "W03", name: "Zahid Mir",     role: "Volunteer",      station: "STA-LD",  status: "idle",    tasks: 0, lat: 34.0960, lon: 74.8480, score: 74, flags: 1, suspended: false },
   { id: "W04", name: "Nazia Bhat",    role: "Lead Inspector", station: "STA-NS",  status: "active",  tasks: 3, lat: 34.1150, lon: 74.8720, score: 95, flags: 0, suspended: false },
   { id: "W05", name: "Tariq Lone",    role: "Municipal",      station: "STA-RW",  status: "offline", tasks: 0, lat: 34.0960, lon: 74.8350, score: 61, flags: 2, suspended: false },
@@ -135,6 +135,21 @@ export default function AdminPortal() {
   const [twinMode, setTwinMode] = useState<"2d" | "3d">("3d");
   const [timeSlider, setTimeSlider] = useState<number>(1); // 0: Past 24h, 1: Current, 2: +7 Days, 3: +14 Days
   const [isPlayingSim, setIsPlayingSim] = useState(false);
+  const [complaints, setComplaints] = useState<any[]>(COMPLAINTS);
+
+  useEffect(() => {
+    const checkCustom = () => {
+      const custom = JSON.parse(localStorage.getItem("dal-custom-complaints") || "[]");
+      if (custom.length > 0) {
+        setComplaints([...custom, ...COMPLAINTS]);
+      } else {
+        setComplaints(COMPLAINTS);
+      }
+    };
+    checkCustom();
+    const interval = setInterval(checkCustom, 2000);
+    return () => clearInterval(interval);
+  }, []);
 
   // Auto-play timeline simulation effect
   useEffect(() => {
@@ -308,7 +323,7 @@ export default function AdminPortal() {
               <div style={{ display: "grid", gridTemplateColumns: "repeat(5, 1fr)", gap: 12 }}>
                 {[
                   { label: "Overall Health", value: overallScore, unit: "/100", color: overallColor, sub: getHealthStatus(overallScore).label },
-                  { label: "Active Tickets",  value: COMPLAINTS.filter(c => c.status !== "resolved").length, color: "#EF4444", sub: "+2 from yesterday" },
+                  { label: "Active Tickets",  value: complaints.filter(c => c.status !== "resolved").length, color: "#EF4444", sub: "+2 from yesterday" },
                   { label: "Critical Zones",  value: activeSectorsData.filter(s => s.score < 60).length, color: "#EF4444", sub: "Below threshold" },
                   { label: "Fleet Active",    value: WORKERS.filter(w => w.status === "active").length, color: "#0EA5E9", sub: `${WORKERS.length} total deployed` },
                   { label: "Twin SCADA Sync", value: "99.3%", color: "#8B5CF6", sub: "30 FPS · Weather Connected" },
@@ -404,7 +419,7 @@ export default function AdminPortal() {
                         </tr>
                       </thead>
                       <tbody>
-                        {COMPLAINTS.slice(0, 4).map((c) => (
+                        {complaints.slice(0, 4).map((c) => (
                           <tr key={c.id} onClick={() => setSelectedComplaint(c)} style={{ cursor: "pointer" }}>
                             <td style={{ fontFamily: "var(--font-mono)", color: "var(--text-muted)" }}>{c.id}</td>
                             <td style={{ fontWeight: 600 }}>{c.cat}</td>
@@ -1028,7 +1043,7 @@ export default function AdminPortal() {
                     </tr>
                   </thead>
                   <tbody>
-                    {COMPLAINTS.map((c) => (
+                    {complaints.map((c) => (
                       <tr key={c.id} className={`priority-${c.aiSeverity}`}>
                         <td style={{ fontFamily: "var(--font-mono)", color: "var(--text-muted)", fontSize: 12 }}>{c.id}</td>
                         <td style={{ fontWeight: 600, fontSize: 13 }}>{c.cat}</td>
@@ -1066,13 +1081,13 @@ export default function AdminPortal() {
           {/* ═══ STATION NETWORK ═══ */}
           {section === "stations" && (
             <div className="animate-fade-in" style={{ display: "flex", flexDirection: "column", gap: 20 }}>
-              <SectionTitle title="Station Network" sub="5 LAWDA command stations with live sector health and pending workload" />
+              <SectionTitle title="Station Network" sub="5 LCMA command stations with live sector health and pending workload" />
               <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 16 }}>
                 {STATION_DATA.map((sta) => {
                   const sectorHealth = SECTOR_HEALTH.find((s) => s.station === sta.id);
                   const score = sectorHealth?.score ?? 65;
                   const color = getHealthColor(score);
-                  const pending = COMPLAINTS.filter((c) => c.status === "pending").length;
+                  const pending = complaints.filter((c) => c.status === "pending").length;
                   return (
                     <div key={sta.id} className="glass-panel" style={{ padding: 22, borderTop: `3px solid ${sta.color}` }}>
                       <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 14 }}>

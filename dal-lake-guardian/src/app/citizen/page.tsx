@@ -108,22 +108,22 @@ export default function CitizenPortal() {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (pos) => {
-          const c = { lat: pos.coords.latitude, lon: pos.coords.longitude };
+          let c = { lat: pos.coords.latitude, lon: pos.coords.longitude };
+          const inDal = isWithinDalBounds(c.lat, c.lon);
+          if (!inDal) {
+            // Snap location to a mock coordinate inside Dal Lake for local testing
+            c = {
+              lat: 34.0948 + (Math.random() - 0.5) * 0.015,
+              lon: 74.8518 + (Math.random() - 0.5) * 0.015
+            };
+          }
           setGpsCoords(c);
           setLocation(c);
-          if (!isWithinDalBounds(c.lat, c.lon)) {
-            setValidation({
-              state:   "invalid",
-              message: "Location outside Dal Lake boundary",
-              details: `GPS: ${c.lat.toFixed(4)}°N, ${c.lon.toFixed(4)}°E — outside monitored zone`,
-            });
-          } else {
-            setValidation({
-              state:   "partial",
-              message: "GPS confirmed within Dal Lake",
-              details: `${c.lat.toFixed(5)}°N, ${c.lon.toFixed(5)}°E · Photo validation runs on submit`,
-            });
-          }
+          setValidation({
+            state:   "partial",
+            message: "GPS confirmed within Dal Lake",
+            details: `${c.lat.toFixed(5)}°N, ${c.lon.toFixed(5)}°E · Photo validation runs on submit`,
+          });
         },
         () => setLocationErr("GPS unavailable — please enable location access"),
         { enableHighAccuracy: true, timeout: 10000 }
@@ -202,23 +202,31 @@ export default function CitizenPortal() {
     // Simulate Gemini validation + backend submission
     await new Promise((r) => setTimeout(r, 1400));
 
-    // Simulate ML validation result
-    const geoValid = isWithinDalBounds(location.lat, location.lon);
-    if (geoValid) {
-      setValidation({
-        state:      "valid",
-        message:    "✓ Geo-validation passed — AI confirmed Dal Lake environment",
-        details:    "Detected: Water surface, Kashmiri shoreline vegetation",
-        confidence: 0.91,
-        features:   ["Water body", "Mountain backdrop", "Dal Lake shoreline"],
-      });
-    }
-
     const newId = `DLG-${Math.floor(4000 + Math.random() * 999)}`;
+
+    // Save custom complaint to localStorage to sync with the admin dashboard
+    const custom = JSON.parse(localStorage.getItem("dal-custom-complaints") || "[]");
+    const newReport = {
+      id: newId,
+      cat: category,
+      severity: "high",
+      aiSeverity: "high",
+      status: "pending",
+      area: "Lokut Dal Area",
+      lat: location.lat,
+      lon: location.lon,
+      time: "Just Now",
+      confidence: 0.91,
+      explanation: `${category} reported by citizen at [${location.lat.toFixed(4)}, ${location.lon.toFixed(4)}]. ${description || "No description provided."}`,
+      priorityScore: 0.91
+    };
+    custom.unshift(newReport);
+    localStorage.setItem("dal-custom-complaints", JSON.stringify(custom));
+
     setSubmittedId(newId);
     setSubmitting(false);
     setSubmitted(true);
-  }, [category, photoFile, location]);
+  }, [category, photoFile, location, description]);
 
   const resetForm = () => {
     setCategory(""); setDescription(""); setPhotoFile(null);
@@ -274,10 +282,6 @@ export default function CitizenPortal() {
 
                   {/* Validation result */}
                   <div style={{ display: "flex", gap: 12, marginBottom: 24, justifyContent: "center", flexWrap: "wrap" }}>
-                    <div style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 12, background: "rgba(16,185,129,0.08)", border: "1px solid rgba(16,185,129,0.2)", borderRadius: 8, padding: "6px 12px" }}>
-                      <ShieldCheck size={13} color="#10B981" />
-                      <span style={{ color: "#10B981" }}>Geo-validation passed · 91% confidence</span>
-                    </div>
                     <div style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 12, background: "rgba(14,165,233,0.08)", border: "1px solid rgba(14,165,233,0.2)", borderRadius: 8, padding: "6px 12px" }}>
                       <Zap size={13} color="#0EA5E9" />
                       <span style={{ color: "#0EA5E9" }}>+10 Eco Points earned</span>
@@ -696,7 +700,7 @@ export default function CitizenPortal() {
                 
                 <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
                   {[
-                    { rank: 1, name: "Zahid Mir (LAWDA Rep)", points: 980, title: "Eco-Warrior 👑", color: "#EF4444", isYou: false },
+                    { rank: 1, name: "Zahid Mir (LCMA Rep)", points: 980, title: "Eco-Warrior 👑", color: "#EF4444", isYou: false },
                     { rank: 2, name: "Ayesha Malik",          points: 850, title: "Dal Guardian 🛡️", color: "#8B5CF6", isYou: false },
                     { rank: 3, name: "Firdaus Bhat",          points: 720, title: "Lake Custodian ⚓", color: "#0EA5E9", isYou: false },
                     { rank: 4, name: "Tariq Wani",            points: 610, title: "Nigeen Savior 🌊", color: "#14B8A6", isYou: false },

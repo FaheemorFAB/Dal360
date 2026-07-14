@@ -4,12 +4,12 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: "Dal360 — Environmental Intelligence Platform",
   description:
-    "LAWDA Digital Twin for Dal Lake, Srinagar. AI-powered pollution monitoring, predictive lake health scoring, and real-time field dispatch.",
+    "LCMA Digital Twin for Dal Lake, Srinagar. AI-powered pollution monitoring, predictive lake health scoring, and real-time field dispatch.",
   keywords: [
-    "Dal Lake", "LAWDA", "digital twin", "environmental monitoring",
+    "Dal Lake", "LCMA", "digital twin", "environmental monitoring",
     "Kashmir", "lake health", "pollution detection", "AI", "water quality"
   ],
-  authors: [{ name: "LAWDA Environmental Intelligence Division" }],
+  authors: [{ name: "LCMA Environmental Intelligence Division" }],
   openGraph: {
     title: "Dal360",
     description: "Environmental Intelligence Platform for Dal Lake, Srinagar",

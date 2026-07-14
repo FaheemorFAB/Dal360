@@ -30,7 +30,7 @@ const ROLE_THEME = {
   },
   admin: {
     title: "Command Centre",
-    badge: "LAWDA Admin",
+    badge: "LCMA Admin",
     color: "text-violet-400 bg-violet-500/5 border-violet-500/10",
   },
 };
