@@ -347,7 +347,7 @@ export default function LandingPage() {
       >
         <span>LCMA DIGITAL TWIN OPS · v2.0 · KASHMIR</span>
         <div style={{ display: "flex", gap: 16, alignItems: "center" }}>
-          {["XGBoost Health", "LightGBM Forecast", "Sentinel-2 Sat", "Gemini Vision"].map((s) => (
+          {["XGBoost Health", "LightGBM Forecast", "Sentinel-2 Sat", "Computer Vision"].map((s) => (
             <span key={s} style={{ display: "flex", alignItems: "center", gap: 4 }}>
               <span className="status-dot status-dot-online" style={{ width: 4, height: 4 }} />
               {s}
