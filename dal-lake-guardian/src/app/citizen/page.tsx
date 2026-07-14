@@ -333,7 +333,7 @@ export default function CitizenPortal() {
                       <div style={{ width: 22, height: 22, borderRadius: "50%", background: "rgba(14,165,233,0.15)", border: "1px solid rgba(14,165,233,0.3)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 11, fontWeight: 700, color: "#0EA5E9", flexShrink: 0 }}>1</div>
                       <div style={{ fontWeight: 600, fontSize: 14 }}>Select Pollution Type</div>
                     </div>
-                    <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 8 }}>
+                    <div className="responsive-citizen-cat-grid" style={{ gap: 8 }}>
                       {CATEGORIES.map((cat) => (
                         <button
                           key={cat}

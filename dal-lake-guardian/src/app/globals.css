@@ -1028,3 +1028,104 @@ html.sidebar-collapsed .nav-collapse-btn svg {
 .z-topbar { z-index: 100; }
 .z-modal  { z-index: 200; }
 .z-toast  { z-index: 300; }
+
+/* ─── Responsive Grid & Layout Utilities ────────────────────── */
+.responsive-stats-grid {
+  display: grid !important;
+  grid-template-columns: repeat(4, 1fr) !important;
+}
+
+.responsive-roles-grid {
+  display: grid !important;
+  grid-template-columns: repeat(3, 1fr) !important;
+}
+
+.responsive-admin-kpi-grid {
+  display: grid !important;
+  grid-template-columns: repeat(5, 1fr) !important;
+}
+
+.responsive-admin-split-grid {
+  display: grid !important;
+  grid-template-columns: 1fr 340px !important;
+}
+
+.responsive-admin-sim-grid {
+  display: grid !important;
+  grid-template-columns: 380px 1fr !important;
+}
+
+.responsive-admin-fleet-grid {
+  display: grid !important;
+  grid-template-columns: repeat(4, 1fr) !important;
+}
+
+.responsive-citizen-cat-grid {
+  display: grid !important;
+  grid-template-columns: repeat(4, 1fr) !important;
+}
+
+@media (max-width: 1200px) {
+  .responsive-admin-kpi-grid {
+    grid-template-columns: repeat(3, 1fr) !important;
+  }
+  .responsive-admin-fleet-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+}
+
+@media (max-width: 1024px) {
+  .responsive-stats-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+  .responsive-roles-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+  .responsive-admin-split-grid {
+    grid-template-columns: 1fr !important;
+  }
+  .responsive-admin-sim-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+@media (max-width: 900px) {
+  .responsive-citizen-cat-grid {
+    grid-template-columns: repeat(3, 1fr) !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .responsive-admin-kpi-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+}
+
+@media (max-width: 640px) {
+  .responsive-stats-grid {
+    grid-template-columns: 1fr !important;
+    gap: 12px !important;
+  }
+  .responsive-roles-grid {
+    grid-template-columns: 1fr !important;
+    gap: 16px !important;
+  }
+  .responsive-admin-fleet-grid {
+    grid-template-columns: 1fr !important;
+  }
+  .responsive-citizen-cat-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+  .hidden-mobile {
+    display: none !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .responsive-admin-kpi-grid {
+    grid-template-columns: 1fr !important;
+  }
+  .responsive-citizen-cat-grid {
+    grid-template-columns: 1fr !important;
+  }
+}

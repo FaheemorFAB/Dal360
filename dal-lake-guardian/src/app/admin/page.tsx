@@ -320,7 +320,7 @@ export default function AdminPortal() {
               </div>
 
               {/* KPI Grid */}
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(5, 1fr)", gap: 12 }}>
+              <div className="responsive-admin-kpi-grid" style={{ gap: 12 }}>
                 {[
                   { label: "Overall Health", value: overallScore, unit: "/100", color: overallColor, sub: getHealthStatus(overallScore).label },
                   { label: "Active Tickets",  value: complaints.filter(c => c.status !== "resolved").length, color: "#EF4444", sub: "+2 from yesterday" },
@@ -474,7 +474,7 @@ export default function AdminPortal() {
               <SectionTitle title="Digital Twin Command Center & Simulation Room" sub="Immersive 3D/2D GIS mapping, real-time sensor array ingestion, and forecast modeling" />
               
               {/* Main twin view grid */}
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 340px", gap: 20 }}>
+              <div className="responsive-admin-split-grid" style={{ gap: 20 }}>
                 {/* Map */}
                 <div>
                   {/* Mode Selector */}
@@ -721,7 +721,7 @@ export default function AdminPortal() {
               </div>
 
               {/* Per-sector grid */}
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(5, 1fr)", gap: 12 }}>
+              <div className="responsive-admin-kpi-grid" style={{ gap: 12 }}>
                 {sectorHealth.map((s) => {
                   const color = getHealthColor(s.score);
                   return (
@@ -746,7 +746,7 @@ export default function AdminPortal() {
                   <div className="ai-badge">🛰️ Sentinel-2 · ESA Copernicus</div>
                   <span style={{ fontSize: 10, color: "var(--text-muted)" }}>Image Date: Jul 8 2026</span>
                 </div>
-                <div style={{ display: "grid", gridTemplateColumns: "repeat(5, 1fr)", gap: 12 }}>
+                <div className="responsive-admin-kpi-grid" style={{ gap: 12 }}>
                   {[
                     { sector: "North-West", ndwi: 0.42, ndvi: 0.28, algae: "35%", note: "Moderate vegetation" },
                     { sector: "West Shore",  ndwi: 0.38, ndvi: 0.41, algae: "71%", note: "High algae bloom" },
@@ -859,7 +859,7 @@ export default function AdminPortal() {
             <div className="animate-fade-in" style={{ display: "flex", flexDirection: "column", gap: 20 }}>
               <SectionTitle title="Simulation Laboratory" sub={'What-if scenario modeling — "What if we remove 200kg plastic?" or "What if 80mm rain tomorrow?"'} />
 
-              <div style={{ display: "grid", gridTemplateColumns: "380px 1fr", gap: 20 }}>
+              <div className="responsive-admin-sim-grid" style={{ gap: 20 }}>
                 {/* Controls */}
                 <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
                   {/* Presets */}
@@ -1260,7 +1260,7 @@ export default function AdminPortal() {
               <SectionTitle title="Analytics & Impact" sub="Environmental outcomes, cleanup effectiveness, and sector trend analysis" />
 
               {/* Impact metrics */}
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 12 }}>
+              <div className="responsive-admin-fleet-grid" style={{ gap: 12 }}>
                 {[
                   { label: "Total Cleanups", value: "127",    sub: "This month", color: "#10B981" },
                   { label: "Waste Removed",  value: "3.1 T",  sub: "Estimated total", color: "#0EA5E9" },

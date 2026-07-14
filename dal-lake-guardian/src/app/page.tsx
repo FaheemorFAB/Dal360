@@ -237,8 +237,8 @@ export default function LandingPage() {
 
         {/* System Stats Bar */}
         <div
-          style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 20, marginBottom: 64 }}
-          className="stagger-children"
+          className="responsive-stats-grid"
+          style={{ gap: 20, marginBottom: 64 }}
         >
           {SYSTEM_STATS.map(({ label, value, Icon }) => (
             <div
@@ -261,7 +261,7 @@ export default function LandingPage() {
         </div>
 
         {/* Role Cards */}
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 32 }} className="stagger-children">
+        <div className="responsive-roles-grid stagger-children" style={{ gap: 32 }}>
           {ROLES.map((role) => {
             const Icon = role.Icon;
             const isHovered = hovered === role.id;
