@@ -28,6 +28,7 @@ export default function DalLakeCesiumTwin({ simulatedSectors, timeSliderIndex = 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const viewerRef = useRef<any>(null);
+  const prevSectorsRef = useRef<string>("");
 
   // Time metrics
   const isPast = timeSliderIndex === 0;
@@ -191,6 +192,7 @@ export default function DalLakeCesiumTwin({ simulatedSectors, timeSliderIndex = 
     if (!viewer) return;
 
     viewer.entities.removeAll();
+    viewer.dataSources.removeAll();
 
     // 1. Load contiguous shoreline sectors from GeoJSON file dynamically
     Cesium.GeoJsonDataSource.load("/geojson/dal-sectors.json").then((dataSource: any) => {
@@ -437,6 +439,10 @@ export default function DalLakeCesiumTwin({ simulatedSectors, timeSliderIndex = 
   };
 
   useEffect(() => {
+    const currentStr = JSON.stringify(simulatedSectors) + "-" + timeSliderIndex;
+    if (currentStr === prevSectorsRef.current) return;
+    prevSectorsRef.current = currentStr;
+
     if (viewerRef.current && (window as any).Cesium) {
       updateLayers(viewerRef.current, (window as any).Cesium);
     }

@@ -7,13 +7,13 @@ Dal360 is an environmental intelligence system designed to preserve and manage D
 ## 📸 Project Screenshots
 
 ### 1. Operations Room (Command Dashboard)
-*(Add screenshot of the Operations dashboard showing the real-time sector metrics, tickets queue, and SCADA analytics)*
+![Operations Room Command Dashboard](./screenshots/operations.png)
 
 ### 2. Immersive 3D Digital Twin (CesiumJS)
-*(Add screenshot of the geolocated 3D terrain simulation highlighting active pollution circles and monitoring command stations)*
+![Immersive 3D Digital Twin](./screenshots/digital_twin.png)
 
-### 3. Citizen Pollution Reporting Portal (Image Verification)
-*(Add screenshot of the Citizen UI showing the camera overlay, automated GPS snapping, and real-time validation tracking)*
+### 3. Citizen Pollution Reporting Portal
+![Citizen Pollution Reporting Portal](./screenshots/citizen.png)
 
 ---
 
