@@ -103,15 +103,6 @@ export default function SideNav({ role, items, activeSection, onSectionChange, s
         </div>
 
         <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-          <div
-            style={{
-              display: "flex", alignItems: "center", gap: 6,
-              fontSize: 10, fontFamily: "var(--font-mono)", color: "var(--text-muted)",
-            }}
-          >
-            <span className="status-dot status-dot-online status-dot-pulse" />
-            <span>34.0895°N · 74.8564°E</span>
-          </div>
           <ThemeToggle />
           <button
             onClick={() => router.push("/")}

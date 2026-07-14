@@ -77,8 +77,6 @@ export default function CyberNav({ role, items, activeSection, onSectionChange }
         </div>
 
         <div className="flex items-center gap-4 text-xs font-mono text-zinc-400">
-          <span className="hidden md:inline">34.0895° N, 74.8564° E</span>
-          <span className="text-zinc-800">|</span>
           <button
             onClick={() => router.push("/")}
             className="flex items-center gap-1.5 text-zinc-400 hover:text-zinc-200 transition-colors"

@@ -391,7 +391,7 @@ export default function AdminPortal() {
                             <span style={{ fontSize: 9, color: "var(--text-muted)" }}>{alert.time}</span>
                           </div>
                           <div style={{ fontSize: 11, color: "var(--text-secondary)" }}>
-                            Anomaly: <strong style={{ color: "#fff" }}>{alert.param} ({alert.change})</strong>
+                            Anomaly: <strong style={{ color: "var(--text-primary)" }}>{alert.param} ({alert.change})</strong>
                           </div>
                           <div style={{ fontSize: 10, color: "var(--text-muted)", marginTop: 2 }}>
                             💡 AI Recommendation: <strong style={{ color: "#10B981" }}>{alert.rec} (ETA: {alert.eta})</strong>
@@ -525,9 +525,9 @@ export default function AdminPortal() {
                     {selectedCamera && (
                       <div style={{
                         position: "absolute", bottom: 20, right: 20, zIndex: 1000,
-                        width: 280, background: "rgba(11,17,23,0.95)", border: "1px solid #0EA5E9",
+                        width: 280, background: "var(--bg-panel)", border: "1px solid var(--border-dim)",
                         borderRadius: 10, padding: 14, backdropFilter: "blur(20px)",
-                        boxShadow: "0 0 20px rgba(14,165,233,0.3)"
+                        boxShadow: "0 0 20px rgba(14,165,233,0.15)"
                       }}>
                         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
                           <div style={{ display: "flex", alignItems: "center", gap: 6 }}>

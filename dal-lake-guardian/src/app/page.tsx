@@ -111,7 +111,7 @@ export default function LandingPage() {
           padding: "0 40px",
           height: 60,
           borderBottom: "1px solid var(--border-dim)",
-          background: "rgba(11,17,23,0.92)",
+          background: "var(--bg-panel)",
           backdropFilter: "blur(20px)",
           position: "sticky",
           top: 0,
@@ -142,38 +142,20 @@ export default function LandingPage() {
 
         {/* Status bar */}
         <div style={{ display: "flex", alignItems: "center", gap: 20 }}>
-          {LIVE_INDICATORS.map((ind) => (
-            <div key={ind.label} style={{ display: "flex", alignItems: "center", gap: 5, fontSize: 10, fontFamily: "var(--font-mono)", color: "var(--text-muted)" }}
-              className="hidden-mobile">
-              <span className="status-dot status-dot-online status-dot-pulse" />
-              <span>{ind.status}</span>
-            </div>
-          ))}
-          <div
-            style={{
-              display: "flex", alignItems: "center", gap: 8,
-              background: "var(--bg-surface)", border: "1px solid var(--border-dim)",
-              borderRadius: 8, padding: "5px 12px",
-              fontSize: 11, fontFamily: "var(--font-mono)", color: "var(--text-secondary)",
-            }}
-          >
-            <span className="status-dot status-dot-online status-dot-pulse" />
-            <span>34.0895°N, 74.8564°E · {time || "—"}</span>
-          </div>
           <ThemeToggle />
         </div>
       </header>
 
       {/* ── HERO ── */}
-      <main style={{ flex: 1, maxWidth: 1200, margin: "0 auto", padding: "64px 40px 48px", width: "100%" }}>
+      <main style={{ flex: 1, maxWidth: 1200, margin: "0 auto", padding: "100px 48px 80px", width: "100%" }}>
 
         {/* Hero Text */}
-        <div style={{ textAlign: "center", marginBottom: 56 }} className="animate-fade-in">
+        <div style={{ textAlign: "center", marginBottom: 72 }} className="animate-fade-in">
           <div
             style={{
               display: "inline-flex", alignItems: "center", gap: 8,
               background: "rgba(14,165,233,0.08)", border: "1px solid rgba(14,165,233,0.2)",
-              borderRadius: 99, padding: "6px 16px", marginBottom: 24,
+              borderRadius: 99, padding: "6px 16px", marginBottom: 28,
               fontSize: 11, fontFamily: "var(--font-mono)", letterSpacing: "0.06em",
               color: "#0EA5E9", textTransform: "uppercase",
             }}
@@ -184,11 +166,11 @@ export default function LandingPage() {
 
           <h1
             style={{
-              fontSize: "clamp(2rem, 5vw, 3.25rem)",
+              fontSize: "clamp(2.5rem, 6vw, 4rem)",
               fontWeight: 800,
               letterSpacing: "-0.04em",
-              lineHeight: 1.1,
-              marginBottom: 20,
+              lineHeight: 1.15,
+              marginBottom: 24,
               color: "var(--text-primary)",
             }}
           >
@@ -205,7 +187,7 @@ export default function LandingPage() {
             </span>
           </h1>
 
-          <p style={{ fontSize: 16, color: "var(--text-secondary)", maxWidth: 560, margin: "0 auto 40px", lineHeight: 1.7 }}>
+          <p style={{ fontSize: 17.5, color: "var(--text-secondary)", maxWidth: 680, margin: "0 auto 48px", lineHeight: 1.8 }}>
             A full-fledged digital twin using XGBoost health prediction, LightGBM risk forecasting,
             Sentinel-2 satellite intelligence, and Gemini Vision ML — not just a dashboard.
           </p>
@@ -251,7 +233,7 @@ export default function LandingPage() {
 
         {/* System Stats Bar */}
         <div
-          style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 12, marginBottom: 48 }}
+          style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 20, marginBottom: 64 }}
           className="stagger-children"
         >
           {SYSTEM_STATS.map(({ label, value, Icon }) => (
@@ -259,23 +241,23 @@ export default function LandingPage() {
               key={label}
               style={{
                 background: "var(--bg-surface)", border: "1px solid var(--border-dim)",
-                borderRadius: 12, padding: "16px 20px",
-                display: "flex", alignItems: "center", gap: 12,
+                borderRadius: 14, padding: "20px 24px",
+                display: "flex", alignItems: "center", gap: 14,
               }}
             >
-              <div style={{ width: 36, height: 36, borderRadius: 8, background: "rgba(14,165,233,0.08)", border: "1px solid rgba(14,165,233,0.15)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-                <Icon size={16} color="#0EA5E9" />
+              <div style={{ width: 40, height: 40, borderRadius: 10, background: "rgba(14,165,233,0.08)", border: "1px solid rgba(14,165,233,0.15)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                <Icon size={18} color="#0EA5E9" />
               </div>
               <div>
-                <div style={{ fontSize: 18, fontWeight: 700, fontFamily: "var(--font-mono)", color: "var(--text-primary)" }}>{value}</div>
-                <div style={{ fontSize: 10, color: "var(--text-muted)", letterSpacing: "0.04em" }}>{label}</div>
+                <div style={{ fontSize: 20, fontWeight: 700, fontFamily: "var(--font-mono)", color: "var(--text-primary)" }}>{value}</div>
+                <div style={{ fontSize: 10.5, color: "var(--text-muted)", letterSpacing: "0.04em" }}>{label}</div>
               </div>
             </div>
           ))}
         </div>
 
         {/* Role Cards */}
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 20 }} className="stagger-children">
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 32 }} className="stagger-children">
           {ROLES.map((role) => {
             const Icon = role.Icon;
             const isHovered = hovered === role.id;
@@ -288,14 +270,14 @@ export default function LandingPage() {
                 style={{
                   background: isHovered ? role.bgGlow : "var(--bg-surface)",
                   border: `1px solid ${isHovered ? role.hoverBorder : role.borderColor}`,
-                  borderRadius: 16,
-                  padding: 28,
+                  borderRadius: 18,
+                  padding: 32,
                   cursor: "pointer",
                   transition: "all 0.25s cubic-bezier(0.4,0,0.2,1)",
                   transform: isHovered ? "translateY(-4px)" : "none",
                   boxShadow: isHovered ? `0 12px 32px ${role.accentColor}18` : "none",
                   display: "flex", flexDirection: "column", justifyContent: "space-between",
-                  minHeight: 280,
+                  minHeight: 310,
                 }}
               >
                 <div>
