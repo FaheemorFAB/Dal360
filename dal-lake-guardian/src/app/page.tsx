@@ -49,7 +49,7 @@ const ROLES = [
 ];
 
 const SYSTEM_STATS = [
-  { label: "Lake Sectors Monitored", value: "5",     Icon: Map },
+  { label: "Lake Sectors Monitored", value: "8",     Icon: Map },
   { label: "AI Models Active",       value: "7",     Icon: Brain },
   { label: "Satellite Coverage",     value: "Weekly", Icon: Satellite },
   { label: "Avg Response Time",      value: "18 min", Icon: Zap },
@@ -65,7 +65,7 @@ const LIVE_INDICATORS = [
 export default function LandingPage() {
   const router = useRouter();
   const [time, setTime] = useState("");
-  const [overallScore, setOverallScore] = useState(58);
+  const [overallScore, setOverallScore] = useState(71);
   const [hovered, setHovered] = useState<string | null>(null);
 
   useEffect(() => {
@@ -81,7 +81,7 @@ export default function LandingPage() {
     let v = 0;
     const id = setInterval(() => {
       v += 2;
-      if (v >= 58) { setOverallScore(58); clearInterval(id); }
+      if (v >= 71) { setOverallScore(71); clearInterval(id); }
       else setOverallScore(v);
     }, 20);
     return () => clearInterval(id);
@@ -211,12 +211,16 @@ export default function LandingPage() {
               <div style={{ fontSize: 12, color: scoreColor, fontWeight: 600, marginTop: 2 }}>{scoreLabel}</div>
             </div>
             <div style={{ width: 1, height: 60, background: "var(--border-dim)" }} />
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "8px 20px" }}>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "6px 20px" }}>
               {[
-                { label: "North-West", score: 71, color: "#F59E0B" },
-                { label: "West Shore",  score: 56, color: "#EF4444" },
-                { label: "East Entry",  score: 82, color: "#10B981" },
-                { label: "Central Dal", score: 43, color: "#EF4444" },
+                { label: "Hazratbal", score: 68, color: "#F59E0B" },
+                { label: "Bod Dal", score: 75, color: "#F59E0B" },
+                { label: "Nishat-Shalimar", score: 68, color: "#F59E0B" },
+                { label: "Nigeen Lake", score: 90, color: "#10B981" },
+                { label: "Lokut Dal", score: 56, color: "#EF4444" },
+                { label: "Rainawari", score: 61, color: "#F59E0B" },
+                { label: "Boulevard", score: 85, color: "#10B981" },
+                { label: "Gagribal", score: 64, color: "#F59E0B" },
               ].map((s) => (
                 <div key={s.label} style={{ display: "flex", alignItems: "center", gap: 8 }}>
                   <div style={{ width: 6, height: 6, borderRadius: "50%", background: s.color, flexShrink: 0 }} />

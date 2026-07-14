@@ -1370,7 +1370,7 @@ export default function AdminPortal() {
                 position: "relative", overflow: "hidden", marginBottom: 14
               }}>
                 <img
-                  src={`/cctv/citizen-${selectedComplaint.id === "DLG-1034" ? 1 : selectedComplaint.id === "DLG-1033" ? 2 : selectedComplaint.id === "DLG-1032" ? 3 : 4}.png`}
+                  src={["DLG-1034", "DLG-1033", "DLG-1032", "DLG-1031"].includes(selectedComplaint.id) ? `/cctv/citizen-${selectedComplaint.id}.png` : `/cctv/citizen-default.png`}
                   alt={selectedComplaint.cat}
                   style={{ width: "100%", height: "100%", objectFit: "cover" }}
                 />
@@ -1390,7 +1390,8 @@ export default function AdminPortal() {
                     {selectedComplaint.id === "DLG-1034" ? "Severe algal bloom and weed canopy observed near Hazratbal NW shore. Needs urgent harvesting." :
                      selectedComplaint.id === "DLG-1033" ? "Oil slick from tourist houseboats spreading near Boulevard shore. Iridescent sheen visible." :
                      selectedComplaint.id === "DLG-1032" ? "Active raw sewage discharge and plastic bag accumulation near Rainawari residential canals." :
-                     "Weed canopy and floating debris blocking shikara channels near Lokut Dal tourist spots."}
+                     selectedComplaint.id === "DLG-1031" ? "Weed canopy and floating debris blocking shikara channels near Lokut Dal tourist spots." :
+                     selectedComplaint.explanation || "Debris and pollution reported by citizen near the shoreline."}
                   </p>
                 </div>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 8 }}>
