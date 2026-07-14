@@ -1,0 +1,14 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    { "type": "Feature", "id": "DLG-1001", "properties": { "cat": "Plastic Waste", "sev": "critical", "size": 180 }, "geometry": { "type": "Point", "coordinates": [74.8518, 34.0912] } },
+    { "type": "Feature", "id": "DLG-1002", "properties": { "cat": "Oil Spill", "sev": "high", "size": 210 }, "geometry": { "type": "Point", "coordinates": [74.8610, 34.1080] } },
+    { "type": "Feature", "id": "DLG-1003", "properties": { "cat": "Sewage Discharge", "sev": "critical", "size": 190 }, "geometry": { "type": "Point", "coordinates": [74.8548, 34.1055] } },
+    { "type": "Feature", "id": "DLG-1004", "properties": { "cat": "Algae Bloom", "sev": "medium", "size": 220 }, "geometry": { "type": "Point", "coordinates": [74.8415, 34.0948] } },
+    { "type": "Feature", "id": "DLG-1005", "properties": { "cat": "Water Hyacinth", "sev": "high", "size": 200 }, "geometry": { "type": "Point", "coordinates": [74.8540, 34.1120] } },
+    { "type": "Feature", "id": "DLG-1006", "properties": { "cat": "Floating Waste", "sev": "low", "size": 150 }, "geometry": { "type": "Point", "coordinates": [74.8490, 34.0875] } },
+    { "type": "Feature", "id": "DLG-1007", "properties": { "cat": "Illegal Dumping", "sev": "medium", "size": 170 }, "geometry": { "type": "Point", "coordinates": [74.8620, 34.0990] } },
+    { "type": "Feature", "id": "DLG-1008", "properties": { "cat": "Dead Fish", "sev": "high", "size": 190 }, "geometry": { "type": "Point", "coordinates": [74.8510, 34.0800] } },
+    { "type": "Feature", "id": "DLG-1009", "properties": { "cat": "Algae Bloom", "sev": "high", "size": 240 }, "geometry": { "type": "Point", "coordinates": [74.8550, 34.1350] } }
+  ]
+}

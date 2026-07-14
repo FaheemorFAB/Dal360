@@ -1,0 +1,10 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    { "type": "Feature", "id": "IoT-01", "properties": { "ph": 7.2, "do": 4.8, "turb": 45 }, "geometry": { "type": "Point", "coordinates": [74.8450, 34.1250] } },
+    { "type": "Feature", "id": "IoT-02", "properties": { "ph": 7.6, "do": 6.4, "turb": 22 }, "geometry": { "type": "Point", "coordinates": [74.8620, 34.1130] } },
+    { "type": "Feature", "id": "IoT-03", "properties": { "ph": 7.4, "do": 6.8, "turb": 18 }, "geometry": { "type": "Point", "coordinates": [74.8340, 34.1080] } },
+    { "type": "Feature", "id": "IoT-04", "properties": { "ph": 6.8, "do": 3.5, "turb": 55 }, "geometry": { "type": "Point", "coordinates": [74.8520, 34.0950] } },
+    { "type": "Feature", "id": "IoT-05", "properties": { "ph": 6.5, "do": 3.1, "turb": 68 }, "geometry": { "type": "Point", "coordinates": [74.8580, 34.0810] } }
+  ]
+}

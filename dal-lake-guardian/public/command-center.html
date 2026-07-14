@@ -1,0 +1,914 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dal Lake Digital Twin — Command Center</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap');
+
+:root{
+  --ink:#0B1F22;
+  --water-deep:#0F2C33;
+  --water-mid:#1B4148;
+  --water-light:#2E5A5C;
+  --mist:#8FAFA9;
+  --parchment:#EDE6D6;
+  --parchment-dim:#B9AF98;
+  --chinar:#C77B3D;
+  --chinar-bright:#E29A56;
+  --healthy:#5E9169;
+  --moderate:#CDA23E;
+  --critical:#B4463C;
+  --emergency:#7A2A22;
+  --line:rgba(237,230,214,0.12);
+  --panel:#102A30;
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;background:var(--ink);color:var(--parchment);font-family:'Inter',sans-serif;}
+body{min-height:100vh;}
+::selection{background:var(--chinar);color:var(--ink);}
+
+.app{display:flex;flex-direction:column;min-height:100vh;}
+
+/* HEADER */
+.top{
+  display:flex;align-items:baseline;justify-content:space-between;
+  padding:22px 32px 16px 32px;
+  border-bottom:1px solid var(--line);
+  flex-wrap:wrap;gap:10px;
+}
+.brand{display:flex;align-items:baseline;gap:14px;}
+.brand h1{
+  font-family:'Fraunces',serif;font-weight:600;font-size:26px;letter-spacing:0.2px;margin:0;color:var(--parchment);
+}
+.brand .sub{
+  font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--chinar-bright);
+}
+.top-meta{font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:var(--mist);text-align:right;line-height:1.6;}
+.top-meta b{color:var(--parchment-dim);}
+
+/* LAYOUT */
+.layout{
+  display:grid;
+  grid-template-columns:260px 1fr 340px;
+  gap:0;
+  flex:1;
+  min-height:0;
+}
+@media (max-width: 1100px){
+  .layout{grid-template-columns:1fr;}
+}
+
+.panel-title{
+  font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:1.8px;text-transform:uppercase;
+  color:var(--chinar-bright);margin:0 0 14px 0;display:flex;align-items:center;gap:8px;
+}
+.panel-title::before{content:'';width:14px;height:1px;background:var(--chinar-bright);display:inline-block;}
+
+/* SIDEBAR */
+.sidebar{
+  border-right:1px solid var(--line);
+  padding:22px 20px;
+  overflow-y:auto;
+}
+.sector-item{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:10px 10px;border-radius:6px;cursor:pointer;
+  margin-bottom:4px;border:1px solid transparent;
+  transition:background .15s, border-color .15s;
+}
+.sector-item:hover{background:rgba(237,230,214,0.05);}
+.sector-item.active{background:rgba(199,123,61,0.12);border-color:rgba(199,123,61,0.4);}
+.sector-item .name{font-size:13px;font-weight:500;color:var(--parchment);}
+.sector-item .name span{display:block;font-family:'IBM Plex Mono',monospace;font-size:9.5px;color:var(--mist);font-weight:400;margin-top:2px;letter-spacing:0.5px;}
+.dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;box-shadow:0 0 8px currentColor;}
+
+.module-toggles{margin-top:26px;padding-top:20px;border-top:1px solid var(--line);}
+.chip{
+  display:inline-flex;align-items:center;gap:6px;font-family:'IBM Plex Mono',monospace;font-size:10.5px;
+  padding:6px 10px;border:1px solid var(--line);border-radius:20px;margin:0 6px 8px 0;cursor:pointer;color:var(--mist);
+  transition:all .15s;
+}
+.chip.on{background:var(--chinar);color:var(--ink);border-color:var(--chinar);font-weight:600;}
+
+/* CENTER MAP */
+.center{
+  padding:22px 26px;display:flex;flex-direction:column;min-height:0;
+}
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:18px;}
+.stat-card{
+  background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:14px 16px;
+}
+.stat-card .val{font-family:'Fraunces',serif;font-size:28px;font-weight:600;line-height:1;color:var(--parchment);}
+.stat-card .lbl{font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:1px;text-transform:uppercase;color:var(--mist);margin-top:6px;}
+.stat-card.warn .val{color:var(--critical);}
+.stat-card.good .val{color:var(--healthy);}
+
+.map-wrap{
+  position:relative;flex:1;min-height:380px;background:radial-gradient(ellipse at 50% 20%, #163a41 0%, var(--water-deep) 55%, #081a1e 100%);
+  border:1px solid var(--line);border-radius:10px;overflow:hidden;
+}
+.map-wrap svg{width:100%;height:100%;display:block;}
+.legend{
+  position:absolute;bottom:14px;left:14px;background:rgba(11,31,34,0.85);border:1px solid var(--line);
+  border-radius:8px;padding:10px 14px;font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--parchment-dim);
+  backdrop-filter:blur(4px);
+}
+.legend-row{display:flex;align-items:center;gap:8px;margin:3px 0;}
+.legend-sw{width:11px;height:11px;border-radius:2px;}
+.compass{position:absolute;top:14px;right:16px;opacity:0.85;}
+.coords{position:absolute;top:14px;left:16px;font-family:'IBM Plex Mono',monospace;font-size:9.5px;color:var(--mist);line-height:1.5;}
+
+.sector-poly{cursor:pointer;stroke:var(--ink);stroke-width:1.5;transition:opacity .2s, filter .2s;}
+.sector-poly:hover{filter:brightness(1.18);}
+.sector-poly.selected{stroke:var(--chinar-bright);stroke-width:2.5;}
+.sector-label{font-family:'IBM Plex Mono',monospace;font-size:9px;fill:var(--ink);pointer-events:none;text-anchor:middle;font-weight:600;}
+
+.timeline{
+  margin-top:16px;background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:14px 18px;
+}
+.timeline-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;}
+.timeline-top .day-lbl{font-family:'Fraunces',serif;font-size:15px;color:var(--chinar-bright);}
+.timeline input[type=range]{width:100%;accent-color:var(--chinar);}
+.timeline-days{display:flex;justify-content:space-between;font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--mist);margin-top:4px;}
+.play-btn{
+  background:none;border:1px solid var(--line);color:var(--parchment-dim);border-radius:6px;padding:5px 12px;
+  font-family:'IBM Plex Mono',monospace;font-size:10.5px;cursor:pointer;
+}
+.play-btn:hover{border-color:var(--chinar);color:var(--chinar-bright);}
+
+/* RIGHT PANEL */
+.right{
+  border-left:1px solid var(--line);
+  padding:22px 20px;display:flex;flex-direction:column;min-height:0;
+}
+.tabs{display:flex;gap:4px;margin-bottom:16px;border-bottom:1px solid var(--line);}
+.tab{
+  font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:0.8px;text-transform:uppercase;
+  padding:8px 4px;margin-right:16px;color:var(--mist);cursor:pointer;border-bottom:2px solid transparent;
+}
+.tab.active{color:var(--chinar-bright);border-color:var(--chinar-bright);}
+.tab-panel{flex:1;overflow-y:auto;min-height:0;}
+.tab-panel::-webkit-scrollbar{width:5px;}
+.tab-panel::-webkit-scrollbar-thumb{background:var(--line);border-radius:3px;}
+
+/* Detail card for selected sector */
+.detail-card{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:16px;margin-bottom:16px;}
+.detail-card h3{font-family:'Fraunces',serif;font-size:18px;margin:0 0 2px 0;color:var(--parchment);}
+.detail-card .badge{
+  display:inline-block;font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:1px;text-transform:uppercase;
+  padding:3px 8px;border-radius:4px;margin-top:6px;font-weight:600;
+}
+.bar-row{margin-top:10px;}
+.bar-row .lbl{display:flex;justify-content:space-between;font-family:'IBM Plex Mono',monospace;font-size:9.5px;color:var(--mist);margin-bottom:3px;}
+.bar-bg{height:6px;background:rgba(237,230,214,0.08);border-radius:3px;overflow:hidden;}
+.bar-fill{height:100%;border-radius:3px;background:var(--chinar);}
+.spark{margin-top:12px;}
+
+/* Feed */
+.feed-item{
+  border-left:2px solid var(--line);padding:8px 0 8px 14px;margin-bottom:2px;position:relative;
+}
+.feed-item::before{content:'';position:absolute;left:-5px;top:13px;width:8px;height:8px;border-radius:50%;background:var(--mist);}
+.feed-item.report::before{background:var(--chinar);}
+.feed-item.ai::before{background:#5E86C7;}
+.feed-item .tag{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:0.8px;text-transform:uppercase;color:var(--chinar-bright);}
+.feed-item .tag.ai{color:#7EA3E0;}
+.feed-item .txt{font-size:12.5px;color:var(--parchment-dim);margin:3px 0;line-height:1.45;}
+.feed-item .meta{font-family:'IBM Plex Mono',monospace;font-size:9.5px;color:var(--mist);}
+
+/* Form */
+.field{margin-bottom:14px;}
+.field label{display:block;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:0.8px;text-transform:uppercase;color:var(--mist);margin-bottom:6px;}
+.field select,.field textarea,.field input{
+  width:100%;background:var(--panel);border:1px solid var(--line);border-radius:6px;color:var(--parchment);
+  padding:9px 10px;font-family:'Inter',sans-serif;font-size:13px;
+}
+.field textarea{resize:vertical;min-height:70px;}
+.submit-btn{
+  width:100%;background:var(--chinar);color:var(--ink);border:none;border-radius:6px;padding:11px;
+  font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:1px;text-transform:uppercase;font-weight:600;cursor:pointer;
+}
+.submit-btn:hover{background:var(--chinar-bright);}
+.hint{font-size:11px;color:var(--mist);margin-top:8px;line-height:1.5;}
+
+/* Rewards / loyalty */
+.rewards-card{
+  background:linear-gradient(160deg, rgba(199,123,61,0.14), rgba(199,123,61,0.03));
+  border:1px solid rgba(199,123,61,0.35);border-radius:8px;padding:16px;margin-bottom:16px;
+}
+.rewards-top{display:flex;align-items:center;justify-content:space-between;gap:10px;}
+.rewards-tier{display:flex;align-items:center;gap:10px;}
+.tier-badge{
+  width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-size:17px;flex-shrink:0;border:2px solid var(--chinar-bright);background:rgba(199,123,61,0.15);
+}
+.tier-name{font-family:'Fraunces',serif;font-size:16px;color:var(--parchment);line-height:1.2;}
+.tier-sub{font-family:'IBM Plex Mono',monospace;font-size:9.5px;color:var(--mist);margin-top:2px;}
+.points-val{font-family:'Fraunces',serif;font-size:24px;color:var(--chinar-bright);text-align:right;line-height:1;}
+.points-lbl{font-family:'IBM Plex Mono',monospace;font-size:8.5px;color:var(--mist);text-align:right;margin-top:3px;letter-spacing:1px;text-transform:uppercase;}
+.progress-wrap{margin-top:14px;}
+.progress-lbl{display:flex;justify-content:space-between;font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--mist);margin-bottom:4px;}
+.progress-bg{height:7px;background:rgba(237,230,214,0.08);border-radius:4px;overflow:hidden;}
+.progress-fill{height:100%;border-radius:4px;background:linear-gradient(90deg, var(--chinar), var(--chinar-bright));transition:width .4s ease;}
+.perk-list{margin-top:14px;border-top:1px solid rgba(237,230,214,0.1);padding-top:12px;}
+.perk-row{display:flex;align-items:flex-start;gap:8px;padding:5px 0;font-size:11.5px;line-height:1.4;}
+.perk-row .chk{flex-shrink:0;width:15px;font-family:'IBM Plex Mono',monospace;font-size:11px;}
+.perk-row.unlocked{color:var(--parchment-dim);}
+.perk-row.unlocked .chk{color:var(--healthy);}
+.perk-row.locked{color:var(--mist);opacity:0.55;}
+.perk-row.locked .chk{color:var(--mist);}
+.perk-row .tname{color:var(--chinar-bright);font-weight:600;}
+.flash-banner{
+  background:rgba(94,145,105,0.15);border:1px solid var(--healthy);color:var(--healthy);
+  border-radius:6px;padding:9px 12px;font-family:'IBM Plex Mono',monospace;font-size:11px;margin-bottom:14px;
+  animation:flashIn .3s ease;
+}
+.flash-banner.tierup{background:rgba(199,123,61,0.15);border-color:var(--chinar);color:var(--chinar-bright);}
+@keyframes flashIn{from{opacity:0;transform:translateY(-4px);}to{opacity:1;transform:translateY(0);}}
+.activity-log{margin-top:12px;border-top:1px solid rgba(237,230,214,0.1);padding-top:10px;}
+.activity-row{display:flex;justify-content:space-between;font-family:'IBM Plex Mono',monospace;font-size:9.5px;color:var(--mist);padding:3px 0;}
+.activity-row b{color:var(--chinar-bright);}
+.header-points{
+  display:inline-flex;align-items:center;gap:6px;font-family:'IBM Plex Mono',monospace;font-size:11px;
+  color:var(--chinar-bright);border:1px solid rgba(199,123,61,0.4);border-radius:20px;padding:4px 11px;margin-top:6px;
+}
+
+/* Ops table */
+.ops-row{
+  display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--line);gap:10px;
+}
+.ops-row:last-child{border-bottom:none;}
+.ops-row .ttl{font-size:12.5px;color:var(--parchment);}
+.ops-row .sub{font-family:'IBM Plex Mono',monospace;font-size:9.5px;color:var(--mist);margin-top:2px;}
+.assign-btn{
+  flex-shrink:0;background:none;border:1px solid var(--healthy);color:var(--healthy);border-radius:5px;
+  padding:5px 10px;font-family:'IBM Plex Mono',monospace;font-size:9.5px;cursor:pointer;
+}
+.assign-btn:hover{background:var(--healthy);color:var(--ink);}
+.assign-btn:disabled{opacity:0.35;border-color:var(--mist);color:var(--mist);cursor:default;}
+
+.empty{color:var(--mist);font-size:12px;font-family:'IBM Plex Mono',monospace;padding:20px 0;text-align:center;}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <div class="top">
+    <div class="brand">
+      <h1>Dal Lake Digital Twin</h1>
+      <span class="sub">Intelligent Lake Management System</span>
+    </div>
+    <div class="top-meta">
+      <div><b>34.1197°N, 74.8631°E</b> · Srinagar, J&amp;K</div>
+      <div id="clockLine">—</div>
+      <div class="header-points" id="headerPoints">🏅 — pts</div>
+    </div>
+  </div>
+
+  <div class="layout">
+
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+      <p class="panel-title">Sectors</p>
+      <div id="sectorList"></div>
+
+      <div class="module-toggles">
+        <p class="panel-title" style="margin-bottom:10px;">Modules</p>
+        <div id="moduleChips"></div>
+      </div>
+    </div>
+
+    <!-- CENTER -->
+    <div class="center">
+      <div class="stats-row" id="statsRow"></div>
+
+      <div class="map-wrap">
+        <div class="coords" id="coordsBox">SECTOR — hover to inspect</div>
+        <svg id="lakeSvg" viewBox="0 0 589 524" preserveAspectRatio="xMidYMid meet"></svg>
+        <div class="legend">
+          <div class="legend-row"><span class="legend-sw" style="background:var(--healthy)"></span> 0–25 Healthy</div>
+          <div class="legend-row"><span class="legend-sw" style="background:var(--moderate)"></span> 26–50 Moderate</div>
+          <div class="legend-row"><span class="legend-sw" style="background:var(--critical)"></span> 51–75 Critical</div>
+          <div class="legend-row"><span class="legend-sw" style="background:var(--emergency)"></span> 76–100 Emergency</div>
+        </div>
+      </div>
+
+      <div class="timeline">
+        <div class="timeline-top">
+          <button class="play-btn" id="playBtn">▶ Replay</button>
+          <div class="day-lbl" id="dayLbl">—</div>
+          <button class="play-btn" id="todayBtn">⏭ Today</button>
+        </div>
+        <input type="range" id="daySlider" min="0" max="13" value="13" step="1">
+        <div class="timeline-days"><span>14 days ago</span><span>Today</span></div>
+      </div>
+    </div>
+
+    <!-- RIGHT -->
+    <div class="right">
+      <div class="tabs">
+        <div class="tab active" data-tab="detail">Sector</div>
+        <div class="tab" data-tab="feed">Live Feed</div>
+        <div class="tab" data-tab="report">Report</div>
+        <div class="tab" data-tab="ops">Operations</div>
+      </div>
+
+      <div class="tab-panel" id="panel-detail"></div>
+      <div class="tab-panel" id="panel-feed" style="display:none;"></div>
+      <div class="tab-panel" id="panel-report" style="display:none;"></div>
+      <div class="tab-panel" id="panel-ops" style="display:none;"></div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+/* ---------------------------------------------------------
+   DATA MODEL
+--------------------------------------------------------- */
+const SECTORS = [
+  { id:'hazratbal', name:'Hazratbal', tag:'NW · Dargah Hazratbal Shrine', station:'Hazratbal Station', bias:{sewage:1.3, veg:1.1, plastic:1.0, algae:1.0, cong:0.8, comp:1.0} },
+  { id:'boddal',    name:'Bod Dal', tag:'N · Main Open-Water Basin', station:'Bod Dal Control Post', bias:{sewage:1.0, veg:1.2, plastic:1.1, algae:1.1, cong:0.9, comp:0.9} },
+  { id:'nishat',    name:'Nishat–Shalimar', tag:'NE · Shalimar &amp; Nishat Gardens', station:'Nishat–Shalimar Station', bias:{sewage:0.8, veg:0.9, plastic:0.9, algae:0.8, cong:0.9, comp:0.8} },
+  { id:'nigeen',    name:'Nigeen Lake', tag:'W Lobe · Nagin Bagh', station:'Nigeen Station', bias:{sewage:0.7, veg:0.8, plastic:0.7, algae:0.7, cong:0.7, comp:0.6} },
+  { id:'lokutdal',  name:'Lokut Dal', tag:'Central · Floating Gardens', station:'Floating Gardens Post', bias:{sewage:0.9, veg:1.0, plastic:1.0, algae:0.9, cong:1.1, comp:1.0} },
+  { id:'rainawari', name:'Rainawari', tag:'SW Shore · Residential', station:'Rainawari Station', bias:{sewage:1.5, veg:1.0, plastic:1.2, algae:1.0, cong:0.7, comp:1.1} },
+  { id:'boulevard', name:'Boulevard–Tulip Garden', tag:'SE Shore · Houseboats &amp; Tourism', station:'Boulevard Station', bias:{sewage:1.1, veg:0.7, plastic:1.3, algae:0.7, cong:1.6, comp:1.5} },
+  { id:'gagribal',  name:'Gagribal–Foreshore', tag:'S Basin · Dal Gate / Pari Mahal', station:'Gagribal Station', bias:{sewage:1.0, veg:0.9, plastic:1.0, algae:0.9, cong:1.0, comp:1.0} },
+];
+
+const WEIGHTS = { plastic:20, veg:15, algae:15, sewage:25, cong:5, comp:10 }; // sums to 90 -> normalize *100/90
+const WSUM = Object.values(WEIGHTS).reduce((a,b)=>a+b,0);
+
+const DAYS = 14;
+const REPORT_TYPES = [
+  'Floating plastic waste','Sewage discharge','Algae bloom','Water hyacinth spread',
+  'Dead fish sighting','Illegal dumping','Oil sheen on water','Boat congestion'
+];
+const AI_DETECTIONS = [
+  'AI flagged floating debris cluster','Satellite NDWI anomaly detected','CCTV: unauthorized shoreline construction',
+  'Drone pass: sedimentation increase','Sensor: turbidity spike','CCTV: night-time dumping activity'
+];
+
+// seeded PRNG so the demo is reproducible across scrubs
+function mulberry32(seed){
+  return function(){
+    seed |= 0; seed = seed + 0x6D2B79F5 | 0;
+    let t = Math.imul(seed ^ seed >>> 15, 1 | seed);
+    t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+    return ((t ^ t >>> 14) >>> 0) / 4294967296;
+  }
+}
+function seedFor(sectorIdx, day, salt){ return sectorIdx*10007 + day*131 + salt*7919 + 42; }
+
+// generate deterministic history: sectorId -> [ {plastic,veg,algae,sewage,cong,comp,score} x14 ]
+const history = {};
+SECTORS.forEach((s, si) => {
+  history[s.id] = [];
+  for (let d=0; d<DAYS; d++){
+    const rnd = mulberry32(seedFor(si, d, 1));
+    const raw = {
+      plastic: Math.min(100, 18 + rnd()*45*s.bias.plastic),
+      veg:     Math.min(100, 12 + rnd()*40*s.bias.veg),
+      algae:   Math.min(100, 10 + rnd()*38*s.bias.algae),
+      sewage:  Math.min(100, 15 + rnd()*48*s.bias.sewage),
+      cong:    Math.min(100, 8  + rnd()*55*s.bias.cong),
+      comp:    Math.min(100, 10 + rnd()*42*s.bias.comp),
+    };
+    const weighted = (raw.plastic*WEIGHTS.plastic + raw.veg*WEIGHTS.veg + raw.algae*WEIGHTS.algae +
+                       raw.sewage*WEIGHTS.sewage + raw.cong*WEIGHTS.cong + raw.comp*WEIGHTS.comp) / WSUM;
+    history[s.id].push({...raw, score: Math.round(weighted)});
+  }
+});
+
+// generate feed items (reports + AI detections) per day per sector
+const feedData = {}; // day -> [{sectorId, kind:'report'|'ai', text, time, resolved}]
+for (let d=0; d<DAYS; d++){
+  feedData[d] = [];
+  SECTORS.forEach((s, si) => {
+    const rnd = mulberry32(seedFor(si, d, 2));
+    const n = Math.floor(rnd()*3); // 0-2 reports
+    for (let i=0;i<n;i++){
+      const r2 = mulberry32(seedFor(si, d, 3+i));
+      feedData[d].push({
+        sectorId: s.id,
+        kind: r2() > 0.4 ? 'report' : 'ai',
+        text: r2() > 0.4 ? REPORT_TYPES[Math.floor(r2()*REPORT_TYPES.length)] : AI_DETECTIONS[Math.floor(r2()*AI_DETECTIONS.length)],
+        time: `${6 + Math.floor(r2()*14)}:${(Math.floor(r2()*60)).toString().padStart(2,'0')}`,
+        resolved: d < DAYS-1 ? true : r2() > 0.55
+      });
+    }
+  });
+}
+
+/* ---------------------------------------------------------
+   STATE
+--------------------------------------------------------- */
+let state = {
+  day: DAYS-1,
+  selectedSector: 'lokutdal',
+  activeTab: 'detail',
+  modules: { environmental:true, operations:true, security:false, water:true, climate:false, community:true },
+  playing: false,
+};
+
+function scoreColor(score){
+  if (score <= 25) return getCss('--healthy');
+  if (score <= 50) return getCss('--moderate');
+  if (score <= 75) return getCss('--critical');
+  return getCss('--emergency');
+}
+function scoreLabel(score){
+  if (score <= 25) return 'Healthy';
+  if (score <= 50) return 'Moderate';
+  if (score <= 75) return 'Critical';
+  return 'Emergency';
+}
+function getCss(varName){ return getComputedStyle(document.documentElement).getPropertyValue(varName).trim(); }
+
+/* ---------------------------------------------------------
+   SVG LAKE MAP  (stylized chart, sectors clipped to lake outline)
+--------------------------------------------------------- */
+const svgNS = "http://www.w3.org/2000/svg";
+const svg = document.getElementById('lakeSvg');
+
+// Governance sectors traced against the real Google Maps screenshot of Dal Lake
+const SECTOR_POLYS = {
+  hazratbal:  "40,35 175,35 175,175 40,175",     // NW — Dargah Hazratbal / Lal Bazar shore
+  boddal:     "175,35 335,35 335,280 175,280",   // N — main open-water basin
+  nishat:     "335,35 495,35 495,280 335,280",   // NE — Shalimar & Nishat gardens shore
+  nigeen:     "40,175 175,175 175,290 40,290",   // W lobe — Nigeen Lake / Nagin Bagh
+  lokutdal:   "175,280 335,280 335,385 175,385", // Central — floating gardens strip
+  rainawari:  "40,290 175,290 175,524 40,524",   // SW shore — Rainawari
+  boulevard:  "335,280 495,280 495,385 335,385", // SE shore — Boulevard / Tulip Garden
+  gagribal:   "175,385 495,385 495,524 175,524", // S basin — Dal Gate / Pari Mahal
+};
+
+// Governing station marker positions
+const STATIONS = {
+  hazratbal:  {x:178, y:158},
+  boddal:     {x:280, y:150},
+  nishat:     {x:400, y:170},
+  nigeen:     {x:115, y:245},
+  lokutdal:   {x:280, y:320},
+  rainawari:  {x:85,  y:400},
+  boulevard:  {x:345, y:340},
+  gagribal:   {x:255, y:440},
+};
+
+const MAP_IMG_B64 = "data:image/png;base64,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";
+
+// generate custom overlay elements inside svg
+let sectorPathsHTML = "";
+let labelTextsHTML = "";
+let stationGHTML = "";
+
+SECTORS.forEach((s, idx) => {
+  const polyCoords = SECTOR_POLYS[s.id];
+  const statPos = STATIONS[s.id];
+  
+  // paths for sectors
+  sectorPathsHTML += `<polygon id="poly-${s.id}" points="${polyCoords}" class="sector-poly" fill="rgba(143,175,169,0.06)" style="transition: fill 0.3s ease;"></polygon>`;
+  
+  // labels inside sectors
+  const centerCoord = polyCoords.split(" ")[0].split(","); // fallback center
+  const cx = statPos.x;
+  const cy = statPos.y + 16;
+  
+  labelTextsHTML += `<text id="lbl-${s.id}" x="${cx}" y="${cy}" class="sector-label" style="opacity:0; transition:opacity 0.2s;">${s.name}</text>`;
+  
+  // station markers
+  stationGHTML += `
+    <g id="station-${s.id}" style="cursor:pointer;" transform="translate(${statPos.x}, ${statPos.y})">
+      <circle r="7" fill="var(--ink)" stroke="var(--parchment)" stroke-width="2"></circle>
+      <circle r="3" fill="${s.id === 'lokutdal' ? 'var(--critical)' : 'var(--mist)'}" class="station-dot"></circle>
+      <text y="-10" text-anchor="middle" font-family="'IBM Plex Mono',monospace" font-size="8.5" fill="var(--parchment-dim)" font-weight="600">${s.name}</text>
+    </g>
+  `;
+});
+
+// embed image inside svg with clipping, borders, overlay paths
+lakeSvg.innerHTML = `
+  <defs>
+    <clipPath id="lakeClip">
+      <path d="M 0 0 L 589 0 L 589 524 L 0 524 Z"></path>
+    </clipPath>
+  </defs>
+  <image href="${MAP_IMG_B64}" width="589" height="524" style="opacity: 0.9; filter: contrast(1.08) saturate(0.92) brightness(0.95);"></image>
+  
+  <!-- Overlay Sector Polygons -->
+  <g id="sectorsGroup">${sectorPathsHTML}</g>
+  
+  <!-- Sector Text Labels -->
+  <g id="labelsGroup">${labelTextsHTML}</g>
+  
+  <!-- Station Pins -->
+  <g id="stationsGroup">${stationGHTML}</g>
+`;
+
+/* ---------------------------------------------------------
+   INTERACTIVITY & RENDERING
+--------------------------------------------------------- */
+function getSectorsCurrentDayData(){
+  const result = {};
+  SECTORS.forEach(s => {
+    result[s.id] = history[s.id][state.day];
+  });
+  return result;
+}
+
+function updateUI(){
+  const currentData = getSectorsCurrentDayData();
+  
+  // 1. Update stats row (Overall metrics for the current day)
+  let sumScore = 0;
+  let sumPlastic = 0;
+  let sumSewage = 0;
+  let activeTicketsCount = 0;
+  
+  SECTORS.forEach(s => {
+    const data = currentData[s.id];
+    sumScore += data.score;
+    sumPlastic += data.plastic;
+    sumSewage += data.sewage;
+    
+    // count active tickets on this day
+    const dayFeed = feedData[state.day] || [];
+    activeTicketsCount += dayFeed.filter(f => f.sectorId === s.id && !f.resolved).length;
+  });
+  
+  const avgScore = Math.round(sumScore / SECTORS.length);
+  const avgPlastic = Math.round(sumPlastic / SECTORS.length);
+  const avgSewage = Math.round(sumSewage / SECTORS.length);
+  
+  const statsRow = document.getElementById('statsRow');
+  statsRow.innerHTML = `
+    <div class="stat-card ${avgScore > 50 ? 'warn' : 'good'}">
+      <div class="val">${avgScore}</div>
+      <div class="lbl">Lake Health score</div>
+    </div>
+    <div class="stat-card">
+      <div class="val">${avgPlastic} kg</div>
+      <div class="lbl">Estimated Floating Waste</div>
+    </div>
+    <div class="stat-card">
+      <div class="val">${avgSewage} NTU</div>
+      <div class="lbl">Avg Turbidity</div>
+    </div>
+    <div class="stat-card warn">
+      <div class="val">${activeTicketsCount}</div>
+      <div class="lbl">Pending Action Tickets</div>
+    </div>
+  `;
+
+  // 2. Update Map Polygons Fill color based on current day score
+  SECTORS.forEach(s => {
+    const data = currentData[s.id];
+    const poly = document.getElementById(`poly-${s.id}`);
+    const color = scoreColor(data.score);
+    
+    if (poly) {
+      const isSelected = state.selectedSector === s.id;
+      poly.setAttribute('fill', color);
+      poly.setAttribute('class', `sector-poly ${isSelected ? 'selected' : ''}`);
+      poly.style.fillOpacity = isSelected ? '0.35' : '0.15';
+    }
+  });
+
+  // 3. Update Sidebar Sectors list
+  const sectorList = document.getElementById('sectorList');
+  sectorList.innerHTML = SECTORS.map(s => {
+    const data = currentData[s.id];
+    const isSelected = state.selectedSector === s.id;
+    return `
+      <div class="sector-item ${isSelected ? 'active' : ''}" onclick="selectSector('${s.id}')">
+        <div class="name">
+          ${s.name}
+          <span>${scoreLabel(data.score)} · WQI ${data.score}</span>
+        </div>
+        <div class="dot" style="color:${scoreColor(data.score)}"></div>
+      </div>
+    `;
+  }).join('');
+
+  // 4. Update timeline slider and day label
+  const daySlider = document.getElementById('daySlider');
+  daySlider.value = state.day;
+  
+  const dayLbl = document.getElementById('dayLbl');
+  const dOffset = DAYS - 1 - state.day;
+  dayLbl.textContent = dOffset === 0 ? "Today" : `${dOffset} days ago`;
+
+  // 5. Update selected sector detail panel
+  renderTabContent();
+  
+  // 6. Update user's mock loyalty/trust score on header
+  const headerPoints = document.getElementById('headerPoints');
+  const totalPoints = 380 + (DAYS - dOffset) * 15;
+  headerPoints.innerHTML = `🏅 ${totalPoints} Eco-Points`;
+}
+
+function selectSector(sectorId){
+  state.selectedSector = sectorId;
+  updateUI();
+}
+
+function renderTabContent(){
+  const detailPanel = document.getElementById('panel-detail');
+  const feedPanel = document.getElementById('panel-feed');
+  const reportPanel = document.getElementById('panel-report');
+  const opsPanel = document.getElementById('panel-ops');
+  
+  const currentData = getSectorsCurrentDayData();
+  const selectedData = currentData[state.selectedSector];
+  const sectorInfo = SECTORS.find(s => s.id === state.selectedSector);
+  
+  // 1. Sector Detail tab
+  const color = scoreColor(selectedData.score);
+  detailPanel.innerHTML = `
+    <div class="detail-card" style="border-top:3px solid ${color}">
+      <h3>${sectorInfo.name}</h3>
+      <div style="font-size:11px; color:var(--mist); font-family:'IBM Plex Mono',monospace;">${sectorInfo.tag}</div>
+      <div class="badge" style="background:${color}20; color:${color}">${scoreLabel(selectedData.score)} · WQI ${selectedData.score}</div>
+      
+      <div style="margin-top:14px;">
+        <div class="bar-row">
+          <div class="lbl"><span>Floating Waste</span><span>${Math.round(selectedData.plastic)} kg</span></div>
+          <div class="bar-bg"><div class="bar-fill" style="width:${selectedData.plastic}%; background:var(--chinar);"></div></div>
+        </div>
+        <div class="bar-row">
+          <div class="lbl"><span>Water Hyacinth</span><span>${Math.round(selectedData.veg)}%</span></div>
+          <div class="bar-bg"><div class="bar-fill" style="width:${selectedData.veg}%; background:var(--healthy);"></div></div>
+        </div>
+        <div class="bar-row">
+          <div class="lbl"><span>Algae Bloom</span><span>${Math.round(selectedData.algae)}%</span></div>
+          <div class="bar-bg"><div class="bar-fill" style="width:${selectedData.algae}%; background:var(--chinar-bright);"></div></div>
+        </div>
+        <div class="bar-row">
+          <div class="lbl"><span>Turbidity Index</span><span>${Math.round(selectedData.sewage)} NTU</span></div>
+          <div class="bar-bg"><div class="bar-fill" style="width:${selectedData.sewage}%; background:var(--critical);"></div></div>
+        </div>
+      </div>
+      
+      <div style="margin-top:16px; border-top:1px solid var(--line); padding-top:12px; font-size:11px; line-height:1.6; color:var(--parchment-dim);">
+        <strong>Governing Command Post:</strong><br>
+        ${sectorInfo.station} (Staffed: 6 operators, 2 skimmers active).
+      </div>
+    </div>
+    
+    <!-- Citizen Rewards Progress Card -->
+    <div class="rewards-card">
+      <div class="rewards-top">
+        <div class="rewards-tier">
+          <div class="tier-badge">🥇</div>
+          <div>
+            <div class="tier-name">Gold Tier</div>
+            <div class="tier-sub">Instant acceptance, priority queue</div>
+          </div>
+        </div>
+        <div>
+          <div class="points-val">91</div>
+          <div class="points-lbl">Trust score</div>
+        </div>
+      </div>
+      
+      <div class="progress-wrap">
+        <div class="progress-lbl"><span>Next level: Eco-Guardian</span><span>91/100</span></div>
+        <div class="progress-bg"><div class="progress-fill" style="width: 91%"></div></div>
+      </div>
+      
+      <div class="perk-list">
+        <div class="perk-row unlocked"><span class="chk">✓</span><span>Reports bypass standard verification</span></div>
+        <div class="perk-row unlocked"><span class="chk">✓</span><span>AI verification weight: <strong class="tname">High</strong></span></div>
+        <div class="perk-row locked"><span class="chk">○</span><span>Eco-Guardian Badge &amp; voting rights</span></div>
+      </div>
+    </div>
+  `;
+  
+  // 2. Live Feed tab
+  const dayFeed = feedData[state.day] || [];
+  const sectorFeed = dayFeed.filter(f => f.sectorId === state.selectedSector);
+  if (sectorFeed.length === 0) {
+    feedPanel.innerHTML = `<div class="empty">No events logged in this sector today.</div>`;
+  } else {
+    feedPanel.innerHTML = sectorFeed.map(f => `
+      <div class="feed-item ${f.kind === 'report' ? 'report' : 'ai'}">
+        <div class="tag ${f.kind === 'ai' ? 'ai' : ''}">${f.kind === 'ai' ? 'Sentinel-2 Satellite' : 'Citizen Report'}</div>
+        <div class="txt">${f.text}</div>
+        <div class="meta">${f.time} · ${f.resolved ? '<span style="color:var(--healthy)">✓ Resolved</span>' : '<span style="color:var(--critical)">Pending Response</span>'}</div>
+      </div>
+    `).join('');
+  }
+
+  // 3. Report tab
+  reportPanel.innerHTML = `
+    <form onsubmit="submitReport(event)">
+      <div class="field">
+        <label>Pollution Category</label>
+        <select id="rep-cat" required>
+          <option value="">Select category...</option>
+          ${REPORT_TYPES.map(r => `<option value="${r}">${r}</option>`).join('')}
+        </select>
+      </div>
+      <div class="field">
+        <label>Description &amp; Context</label>
+        <textarea id="rep-desc" placeholder="Provide specific details..." required></textarea>
+      </div>
+      <div class="field">
+        <label>Estimated Coordinates</label>
+        <input type="text" value="34.0950°N, 74.8550°E" readonly style="background:rgba(237,230,214,0.03); color:var(--mist)">
+      </div>
+      <button type="submit" class="submit-btn">Submit Report</button>
+      <div class="hint">Your report will be automatically processed. Current trust score: <strong>Gold (91)</strong> guarantees priority queue.</div>
+    </form>
+  `;
+
+  // 4. Operations tab
+  const pendingTickets = dayFeed.filter(f => f.sectorId === state.selectedSector && !f.resolved);
+  if (pendingTickets.length === 0) {
+    opsPanel.innerHTML = `<div class="empty">No pending operations tickets.</div>`;
+  } else {
+    opsPanel.innerHTML = pendingTickets.map((t, idx) => `
+      <div class="ops-row">
+        <div>
+          <div class="ttl">${t.text}</div>
+          <div class="sub">Log Time: ${t.time} · Sector: ${sectorInfo.name}</div>
+        </div>
+        <button class="assign-btn" onclick="dispatchCrew('${t.text}', this)">Dispatch</button>
+      </div>
+    `).join('');
+  }
+}
+
+// simulate operations dispatch click
+function dispatchCrew(task, button) {
+  button.disabled = true;
+  button.textContent = "Dispatched";
+  button.style.borderColor = "var(--mist)";
+  button.style.color = "var(--mist)";
+  
+  // push live feed item
+  const dayFeed = feedData[state.day] || [];
+  dayFeed.push({
+    sectorId: state.selectedSector,
+    kind: 'ai',
+    text: `Crew dispatched: ${task}`,
+    time: 'Now',
+    resolved: false
+  });
+  setTimeout(() => {
+    updateUI();
+  }, 1000);
+}
+
+// simulate report submission
+function submitReport(e) {
+  e.preventDefault();
+  const cat = document.getElementById('rep-cat').value;
+  const desc = document.getElementById('rep-desc').value;
+  
+  // append item to current day's live feed
+  feedData[state.day].push({
+    sectorId: state.selectedSector,
+    kind: 'report',
+    text: cat,
+    time: 'Now',
+    resolved: false
+  });
+  
+  alert(`Report submitted successfully! High citizen trust score detected. Standard AI verification bypassed.`);
+  
+  // switch tab to live feed
+  switchTab('feed');
+  updateUI();
+}
+
+function switchTab(tabId){
+  state.activeTab = tabId;
+  
+  // toggle tab styling
+  document.querySelectorAll('.tab').forEach(el => {
+    if (el.getAttribute('data-tab') === tabId) {
+      el.classList.add('active');
+    } else {
+      el.classList.remove('active');
+    }
+  });
+  
+  // toggle tab panels
+  document.querySelectorAll('.tab-panel').forEach(panel => {
+    if (panel.id === `panel-${tabId}`) {
+      panel.style.display = 'block';
+    } else {
+      panel.style.display = 'none';
+    }
+  });
+  
+  renderTabContent();
+}
+
+/* ---------------------------------------------------------
+   EVENTS & COMPASS / CLOCK
+--------------------------------------------------------- */
+// register SVG hover coordinates inspection
+const lakeSvg = document.getElementById('lakeSvg');
+const coordsBox = document.getElementById('coordsBox');
+
+lakeSvg.addEventListener('mousemove', (e) => {
+  const rect = lakeSvg.getBoundingClientRect();
+  const x = Math.round(e.clientX - rect.left);
+  const y = Math.round(e.clientY - rect.top);
+  
+  // map to coordinates
+  const lat = (34.135 - (y / 524) * 0.08).toFixed(4);
+  const lon = (74.800 + (x / 589) * 0.12).toFixed(4);
+  
+  // detect sector hover
+  let hoveredSector = "Open Water";
+  SECTORS.forEach(s => {
+    const poly = document.getElementById(`poly-${s.id}`);
+    if (poly && poly === e.target) {
+      hoveredSector = s.name;
+    }
+  });
+  
+  coordsBox.innerHTML = `<strong>${hoveredSector}</strong> · ${lat}°N, ${lon}°E (GRID: ${x}, ${y})`;
+});
+
+lakeSvg.addEventListener('mouseleave', () => {
+  coordsBox.textContent = "SECTOR — hover to inspect";
+});
+
+// tab clicks
+document.querySelectorAll('.tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    switchTab(tab.getAttribute('data-tab'));
+  });
+});
+
+// slider scrubbing
+const daySlider = document.getElementById('daySlider');
+daySlider.addEventListener('input', (e) => {
+  state.day = parseInt(e.target.value);
+  updateUI();
+});
+
+// timeline replay animation
+let timerId = null;
+const playBtn = document.getElementById('playBtn');
+
+playBtn.addEventListener('click', () => {
+  if (state.playing) {
+    clearInterval(timerId);
+    playBtn.textContent = "▶ Replay";
+    state.playing = false;
+  } else {
+    state.playing = true;
+    playBtn.textContent = "⏸ Pause";
+    
+    // start from day 0 if at the end
+    if (state.day === DAYS-1) {
+      state.day = 0;
+      updateUI();
+    }
+    
+    timerId = setInterval(() => {
+      if (state.day < DAYS-1) {
+        state.day++;
+        updateUI();
+      } else {
+        clearInterval(timerId);
+        playBtn.textContent = "▶ Replay";
+        state.playing = false;
+      }
+    }, 850);
+  }
+});
+
+const todayBtn = document.getElementById('todayBtn');
+todayBtn.addEventListener('click', () => {
+  if (state.playing) {
+    clearInterval(timerId);
+    playBtn.textContent = "▶ Replay";
+    state.playing = false;
+  }
+  state.day = DAYS-1;
+  updateUI();
+});
+
+// Clock ticking
+function tickClock() {
+  const clockLine = document.getElementById('clockLine');
+  const d = new Date();
+  clockLine.textContent = d.toLocaleTimeString() + " | SYNC NOMINAL";
+}
+setInterval(tickClock, 1000);
+tickClock();
+
+// initialize UI
+updateUI();
+</script>
+</body>
+</html>

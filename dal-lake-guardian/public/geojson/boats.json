@@ -1,0 +1,37 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "id": "skimmer-1",
+      "properties": {
+        "name": "Skimmer 01",
+        "type": "skimmer"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [74.8564, 34.1120],
+          [74.8420, 34.1350],
+          [74.8620, 34.0850]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "harvester-2",
+      "properties": {
+        "name": "Harvester 02",
+        "type": "harvester"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [74.8480, 34.0960],
+          [74.8320, 34.1120],
+          [74.8520, 34.0790]
+        ]
+      }
+    }
+  ]
+}

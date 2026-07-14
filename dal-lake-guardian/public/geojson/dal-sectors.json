@@ -1,0 +1,195 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "id": "hazratbal",
+      "properties": {
+        "name": "Hazratbal (NW Shore)",
+        "stationId": "STA-HAZ",
+        "color": "#0EA5E9",
+        "center": [34.1350, 74.8420]
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [74.830, 34.148],
+            [74.885, 34.148],
+            [74.885, 34.130],
+            [74.862, 34.125],
+            [74.850, 34.120],
+            [74.835, 34.120],
+            [74.830, 34.140],
+            [74.830, 34.148]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "boddal",
+      "properties": {
+        "name": "Bod Dal (N Basin)",
+        "stationId": "STA-BD",
+        "color": "#10B981",
+        "center": [34.1150, 74.8560]
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [74.835, 34.120],
+            [74.850, 34.120],
+            [74.862, 34.125],
+            [74.865, 34.102],
+            [74.848, 34.102],
+            [74.835, 34.110],
+            [74.835, 34.120]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "nishat",
+      "properties": {
+        "name": "Nishat–Shalimar (NE Shore)",
+        "stationId": "STA-NS",
+        "color": "#8B5CF6",
+        "center": [34.1150, 74.8720]
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [74.862, 34.125],
+            [74.885, 34.130],
+            [74.885, 34.090],
+            [74.865, 34.090],
+            [74.865, 34.102],
+            [74.862, 34.125]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "nigeen",
+      "properties": {
+        "name": "Nigeen Lake (W Lobe)",
+        "stationId": "STA-NG",
+        "color": "#EC4899",
+        "center": [34.1250, 74.8250]
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [74.810, 34.140],
+            [74.830, 34.140],
+            [74.835, 34.120],
+            [74.835, 34.110],
+            [74.820, 34.108],
+            [74.810, 34.115],
+            [74.810, 34.140]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "lokutdal",
+      "properties": {
+        "name": "Lokut Dal (Central)",
+        "stationId": "STA-LD",
+        "color": "#F59E0B",
+        "center": [34.0950, 74.8550]
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [74.835, 34.110],
+            [74.848, 34.102],
+            [74.865, 34.102],
+            [74.865, 34.090],
+            [74.845, 34.085],
+            [74.838, 34.088],
+            [74.842, 34.090],
+            [74.835, 34.110]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "rainawari",
+      "properties": {
+        "name": "Rainawari (SW Shore)",
+        "stationId": "STA-RW",
+        "color": "#EF4444",
+        "center": [34.0960, 74.8320]
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [74.820, 34.108],
+            [74.835, 34.110],
+            [74.842, 34.090],
+            [74.838, 34.088],
+            [74.822, 34.088],
+            [74.820, 34.108]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "boulevard",
+      "properties": {
+        "name": "Boulevard–Tulip Garden (SE)",
+        "stationId": "STA-BL",
+        "color": "#14B8A6",
+        "center": [34.0820, 74.8520]
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [74.865, 34.090],
+            [74.885, 34.090],
+            [74.885, 34.080],
+            [74.845, 34.085],
+            [74.865, 34.090]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "gagribal",
+      "properties": {
+        "name": "Gagribal–Foreshore (S Basin)",
+        "stationId": "STA-GB",
+        "color": "#F97316",
+        "center": [34.0750, 74.8420]
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [74.822, 34.088],
+            [74.838, 34.088],
+            [74.845, 34.085],
+            [74.848, 34.078],
+            [74.848, 34.070],
+            [74.825, 34.070],
+            [74.822, 34.088]
+          ]
+        ]
+      }
+    }
+  ]
+}
