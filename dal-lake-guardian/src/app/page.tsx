@@ -108,7 +108,7 @@ export default function LandingPage() {
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
-          padding: "0 40px",
+          padding: "0 clamp(16px, 4vw, 40px)",
           height: 60,
           borderBottom: "1px solid var(--border-dim)",
           background: "var(--bg-panel)",
@@ -141,16 +141,19 @@ export default function LandingPage() {
         </div>
 
         {/* Status bar */}
-        <div style={{ display: "flex", alignItems: "center", gap: 20 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
           <ThemeToggle />
         </div>
       </header>
 
       {/* ── HERO ── */}
-      <main style={{ flex: 1, maxWidth: 1200, margin: "0 auto", padding: "100px 48px 80px", width: "100%" }}>
+      <main
+        style={{ flex: 1, maxWidth: 1200, margin: "0 auto", width: "100%" }}
+        className="hero-main-padding"
+      >
 
         {/* Hero Text */}
-        <div style={{ textAlign: "center", marginBottom: 72 }} className="animate-fade-in">
+        <div style={{ textAlign: "center", marginBottom: 72, padding: "0 16px" }} className="animate-fade-in">
           <div
             style={{
               display: "inline-flex", alignItems: "center", gap: 8,
@@ -164,54 +167,63 @@ export default function LandingPage() {
             LCMA · Digital Twin Operations · v2.0
           </div>
 
-          <h1
+          {/* DAL360 — the big brand statement */}
+          <div
             style={{
-              fontSize: "clamp(2.5rem, 6vw, 4rem)",
-              fontWeight: 800,
-              letterSpacing: "-0.04em",
-              lineHeight: 1.15,
-              marginBottom: 24,
-              color: "var(--text-primary)",
+              fontSize: "clamp(3rem, 10vw, 7rem)",
+              fontWeight: 900,
+              letterSpacing: "-0.05em",
+              lineHeight: 0.9,
+              marginBottom: 16,
+              background: "linear-gradient(135deg, #0EA5E9 0%, #14B8A6 45%, #10B981 100%)",
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+              backgroundClip: "text",
+              fontFamily: "var(--font-ui)",
+              userSelect: "none",
             }}
           >
-            Preserving Dal Lake
-            <br />
-            <span
-              style={{
-                background: "linear-gradient(135deg, #0EA5E9 0%, #14B8A6 50%, #10B981 100%)",
-                WebkitBackgroundClip: "text",
-                WebkitTextFillColor: "transparent",
-              }}
-            >
-              Through Environmental Intelligence
-            </span>
+            DAL360
+          </div>
+
+          <h1
+            style={{
+              fontSize: "clamp(1.1rem, 2.5vw, 1.5rem)",
+              fontWeight: 600,
+              letterSpacing: "-0.02em",
+              lineHeight: 1.3,
+              marginBottom: 20,
+              color: "var(--text-secondary)",
+            }}
+          >
+            Environmental Intelligence Platform for Dal Lake
           </h1>
 
-          <p style={{ fontSize: 17.5, color: "var(--text-secondary)", maxWidth: 680, margin: "0 auto 48px", lineHeight: 1.8 }}>
+          <p style={{ fontSize: "clamp(14px, 2vw, 17px)", color: "var(--text-secondary)", maxWidth: 640, margin: "0 auto 48px", lineHeight: 1.8 }}>
             A full-fledged digital twin using XGBoost health prediction, LightGBM risk forecasting,
             Sentinel-2 satellite intelligence, and computer vision validation — not just a dashboard.
           </p>
 
           {/* Live Lake Health Score */}
           <div
+            className="hero-health-widget"
             style={{
-              display: "inline-flex", alignItems: "center", gap: 24,
               background: "var(--bg-surface)", border: `1px solid ${scoreColor}33`,
-              borderRadius: 16, padding: "20px 32px",
+              borderRadius: 16, padding: "20px 24px",
               boxShadow: `0 0 32px ${scoreColor}15`,
             }}
           >
-            <div style={{ textAlign: "center" }}>
-              <div style={{ fontSize: 11, fontFamily: "var(--font-mono)", color: "var(--text-muted)", letterSpacing: "0.08em", marginBottom: 4 }}>
+            <div style={{ textAlign: "center", minWidth: 80 }}>
+              <div style={{ fontSize: 10, fontFamily: "var(--font-mono)", color: "var(--text-muted)", letterSpacing: "0.08em", marginBottom: 4 }}>
                 OVERALL LAKE HEALTH
               </div>
-              <div style={{ fontSize: 48, fontWeight: 800, fontFamily: "var(--font-mono)", color: scoreColor, lineHeight: 1 }}>
+              <div style={{ fontSize: 44, fontWeight: 800, fontFamily: "var(--font-mono)", color: scoreColor, lineHeight: 1 }}>
                 {overallScore}
               </div>
               <div style={{ fontSize: 12, color: scoreColor, fontWeight: 600, marginTop: 2 }}>{scoreLabel}</div>
             </div>
-            <div style={{ width: 1, height: 60, background: "var(--border-dim)" }} />
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "6px 20px" }}>
+            <div style={{ width: 1, height: 60, background: "var(--border-dim)" }} className="hidden-mobile" />
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "6px 16px" }}>
               {[
                 { label: "Hazratbal", score: 68, color: "#F59E0B" },
                 { label: "Bod Dal", score: 75, color: "#F59E0B" },
@@ -222,14 +234,14 @@ export default function LandingPage() {
                 { label: "Boulevard", score: 85, color: "#10B981" },
                 { label: "Gagribal", score: 64, color: "#F59E0B" },
               ].map((s) => (
-                <div key={s.label} style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                  <div style={{ width: 6, height: 6, borderRadius: "50%", background: s.color, flexShrink: 0 }} />
-                  <span style={{ fontSize: 11, color: "var(--text-muted)", fontFamily: "var(--font-mono)" }}>{s.label}</span>
-                  <span style={{ fontSize: 11, fontWeight: 700, color: s.color, fontFamily: "var(--font-mono)" }}>{s.score}</span>
+                <div key={s.label} style={{ display: "flex", alignItems: "center", gap: 6, minWidth: 0 }}>
+                  <div style={{ width: 5, height: 5, borderRadius: "50%", background: s.color, flexShrink: 0 }} />
+                  <span style={{ fontSize: 10, color: "var(--text-muted)", fontFamily: "var(--font-mono)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{s.label}</span>
+                  <span style={{ fontSize: 10, fontWeight: 700, color: s.color, fontFamily: "var(--font-mono)", flexShrink: 0 }}>{s.score}</span>
                 </div>
               ))}
             </div>
-            <div style={{ fontSize: 9, color: "var(--text-muted)", fontFamily: "var(--font-mono)", writingMode: "vertical-rl" }}>
+            <div style={{ fontSize: 9, color: "var(--text-muted)", fontFamily: "var(--font-mono)", writingMode: "vertical-rl" }} className="hidden-mobile">
               XGBoost · Live
             </div>
           </div>
@@ -238,7 +250,7 @@ export default function LandingPage() {
         {/* System Stats Bar */}
         <div
           className="responsive-stats-grid"
-          style={{ gap: 20, marginBottom: 64 }}
+          style={{ gap: 16, marginBottom: 48 }}
         >
           {SYSTEM_STATS.map(({ label, value, Icon }) => (
             <div
@@ -261,7 +273,7 @@ export default function LandingPage() {
         </div>
 
         {/* Role Cards */}
-        <div className="responsive-roles-grid stagger-children" style={{ gap: 32 }}>
+        <div className="responsive-roles-grid stagger-children" style={{ gap: 24 }}>
           {ROLES.map((role) => {
             const Icon = role.Icon;
             const isHovered = hovered === role.id;
@@ -335,10 +347,12 @@ export default function LandingPage() {
       <footer
         style={{
           borderTop: "1px solid var(--border-dim)",
-          padding: "16px 40px",
+          padding: "16px 24px",
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
+          flexWrap: "wrap",
+          gap: 8,
           fontSize: 10,
           fontFamily: "var(--font-mono)",
           color: "var(--text-muted)",
@@ -346,8 +360,8 @@ export default function LandingPage() {
         }}
       >
         <span>LCMA DIGITAL TWIN OPS · v2.0 · KASHMIR</span>
-        <div style={{ display: "flex", gap: 16, alignItems: "center" }}>
-          {["XGBoost Health", "LightGBM Forecast", "Sentinel-2 Sat", "Computer Vision"].map((s) => (
+        <div style={{ display: "flex", gap: 12, alignItems: "center", flexWrap: "wrap" }}>
+          {["XGBoost", "LightGBM", "Sentinel-2", "CV"].map((s) => (
             <span key={s} style={{ display: "flex", alignItems: "center", gap: 4 }}>
               <span className="status-dot status-dot-online" style={{ width: 4, height: 4 }} />
               {s}

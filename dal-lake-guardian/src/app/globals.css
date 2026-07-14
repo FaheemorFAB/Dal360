@@ -1030,41 +1030,112 @@ html.sidebar-collapsed .nav-collapse-btn svg {
 .z-toast  { z-index: 300; }
 
 /* ─── Responsive Grid & Layout Utilities ────────────────────── */
+
+/* Portal container — replaces hardcoded paddingLeft on <main> */
+.portal-main {
+  padding-left: 248px;
+  padding-top: 60px;
+  min-height: 100vh;
+  transition: padding-left 0.2s ease-in-out;
+}
+.portal-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 28px 28px 80px;
+}
+
+/* Landing page hero: full-bleed health widget responsive */
+.hero-health-widget {
+  display: inline-flex;
+  align-items: center;
+  gap: 24px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+/* Base padding for hero main — overridden in media queries */
+.hero-main-padding {
+  padding: 80px 40px 60px !important;
+}
+
+/* Generic responsive grids */
+.responsive-grid-2 {
+  display: grid !important;
+  grid-template-columns: repeat(2, 1fr) !important;
+}
+.responsive-grid-3 {
+  display: grid !important;
+  grid-template-columns: repeat(3, 1fr) !important;
+}
+.responsive-grid-4 {
+  display: grid !important;
+  grid-template-columns: repeat(4, 1fr) !important;
+}
+/* Asymmetric split e.g. 1fr / 2fr */
+.responsive-split-1-2 {
+  display: grid !important;
+  grid-template-columns: 1fr 2fr !important;
+}
+/* 7-col forecast calendar */
+.responsive-forecast-grid {
+  display: grid !important;
+  grid-template-columns: repeat(7, 1fr) !important;
+}
+
+/* Legacy grid classes kept for existing usage */
 .responsive-stats-grid {
   display: grid !important;
   grid-template-columns: repeat(4, 1fr) !important;
 }
-
 .responsive-roles-grid {
   display: grid !important;
   grid-template-columns: repeat(3, 1fr) !important;
 }
-
 .responsive-admin-kpi-grid {
   display: grid !important;
   grid-template-columns: repeat(5, 1fr) !important;
 }
-
 .responsive-admin-split-grid {
   display: grid !important;
   grid-template-columns: 1fr 340px !important;
 }
-
 .responsive-admin-sim-grid {
   display: grid !important;
   grid-template-columns: 380px 1fr !important;
 }
-
 .responsive-admin-fleet-grid {
   display: grid !important;
-  grid-template-columns: repeat(4, 1fr) !important;
+  grid-template-columns: repeat(2, 1fr) !important;
 }
-
 .responsive-citizen-cat-grid {
   display: grid !important;
   grid-template-columns: repeat(4, 1fr) !important;
 }
 
+/* ─── Mobile Sidebar Auto-collapse ──────────────────────────── */
+@media (max-width: 768px) {
+  /* Force sidebar into icon-only collapsed mode on mobile */
+  .nav-side {
+    width: 76px !important;
+  }
+  .nav-side .nav-logo-text,
+  .nav-side .nav-item span,
+  .nav-side .nav-footer-text {
+    display: none !important;
+  }
+  .nav-top {
+    padding-left: 92px !important;
+  }
+  .portal-main {
+    padding-left: 76px !important;
+  }
+  /* Sidebar collapse button hidden on mobile */
+  .nav-collapse-btn {
+    display: none !important;
+  }
+}
+
+/* ─── Breakpoint: 1200px ─────────────────────────────────────── */
 @media (max-width: 1200px) {
   .responsive-admin-kpi-grid {
     grid-template-columns: repeat(3, 1fr) !important;
@@ -1074,6 +1145,7 @@ html.sidebar-collapsed .nav-collapse-btn svg {
   }
 }
 
+/* ─── Breakpoint: 1024px ─────────────────────────────────────── */
 @media (max-width: 1024px) {
   .responsive-stats-grid {
     grid-template-columns: repeat(2, 1fr) !important;
@@ -1087,20 +1159,44 @@ html.sidebar-collapsed .nav-collapse-btn svg {
   .responsive-admin-sim-grid {
     grid-template-columns: 1fr !important;
   }
+  .responsive-forecast-grid {
+    grid-template-columns: repeat(4, 1fr) !important;
+  }
+  .responsive-grid-3 {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
 }
 
+/* ─── Breakpoint: 900px ──────────────────────────────────────── */
 @media (max-width: 900px) {
   .responsive-citizen-cat-grid {
     grid-template-columns: repeat(3, 1fr) !important;
   }
-}
-
-@media (max-width: 768px) {
   .responsive-admin-kpi-grid {
     grid-template-columns: repeat(2, 1fr) !important;
   }
 }
 
+/* ─── Breakpoint: 768px ──────────────────────────────────────── */
+@media (max-width: 768px) {
+  .responsive-admin-kpi-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+  .responsive-forecast-grid {
+    grid-template-columns: repeat(4, 1fr) !important;
+  }
+  .responsive-split-1-2 {
+    grid-template-columns: 1fr !important;
+  }
+  .responsive-grid-2 {
+    grid-template-columns: 1fr !important;
+  }
+  .portal-content {
+    padding: 20px 16px 80px !important;
+  }
+}
+
+/* ─── Breakpoint: 640px ──────────────────────────────────────── */
 @media (max-width: 640px) {
   .responsive-stats-grid {
     grid-template-columns: 1fr !important;
@@ -1116,16 +1212,46 @@ html.sidebar-collapsed .nav-collapse-btn svg {
   .responsive-citizen-cat-grid {
     grid-template-columns: repeat(2, 1fr) !important;
   }
+  .responsive-forecast-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+  .responsive-grid-3 {
+    grid-template-columns: 1fr !important;
+  }
   .hidden-mobile {
     display: none !important;
   }
+  /* Landing page hero content padding */
+  .hero-main-padding {
+    padding: 60px 20px 60px !important;
+  }
 }
 
+/* ─── Breakpoint: 480px ──────────────────────────────────────── */
 @media (max-width: 480px) {
   .responsive-admin-kpi-grid {
     grid-template-columns: 1fr !important;
   }
   .responsive-citizen-cat-grid {
     grid-template-columns: 1fr !important;
+  }
+  .responsive-forecast-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+  /* Nav top on very small screens */
+  .nav-top {
+    padding-left: 88px !important;
+    padding-right: 12px !important;
+  }
+}
+
+/* ─── Map Overlay Responsive ─────────────────────────────────── */
+@media (max-width: 500px) {
+  .map-overlay-toggles {
+    display: none !important;
+  }
+  .map-overlay-legend {
+    font-size: 8px !important;
+    padding: 6px 8px !important;
   }
 }

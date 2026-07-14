@@ -58,8 +58,8 @@ export default function WorkerPortal() {
   return (
     <div style={{ minHeight: "100vh", background: "var(--bg-base)", color: "var(--text-primary)" }}>
       <SideNav role="worker" items={NAV_ITEMS} activeSection={section} onSectionChange={setSection} />
-      <main style={{ paddingLeft: 248, paddingTop: 60 }}>
-        <div style={{ maxWidth: 1000, margin: "0 auto", padding: "28px 28px 60px" }}>
+      <main className="portal-main">
+        <div className="portal-content">
 
           {/* TASKS */}
           {section === "tasks" && (
@@ -77,7 +77,7 @@ export default function WorkerPortal() {
                 </div>
               </div>
 
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 12 }}>
+              <div className="responsive-grid-3" style={{ gap: 12 }}>
                 {[
                   { label: "Active Tasks", value: tasks.filter(t => t.status !== "resolved").length, color: "#0EA5E9", Icon: ClipboardList },
                   { label: "Completed",    value: tasks.filter(t => t.status === "resolved").length,  color: "#10B981", Icon: CheckCircle },
@@ -143,7 +143,7 @@ export default function WorkerPortal() {
                       )}
                     </div>
 
-                    <div style={{ marginTop: 14, display: "grid", gridTemplateColumns: "1fr 2fr", gap: 12 }}>
+                    <div className="responsive-split-1-2" style={{ marginTop: 14, gap: 12 }}>
                       <div style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 12 }}>
                         <Timer size={13} color="#0EA5E9" />
                         <span style={{ color: "var(--text-muted)" }}>ETA:</span>
@@ -183,7 +183,7 @@ export default function WorkerPortal() {
           {section === "performance" && (
             <div className="animate-fade-in" style={{ display: "flex", flexDirection: "column", gap: 20 }}>
               <h1 style={{ fontSize: 22, fontWeight: 700 }}>My Performance</h1>
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 16 }}>
+              <div className="responsive-grid-2" style={{ gap: 16 }}>
                 <div className="glass-panel" style={{ padding: 24, textAlign: "center", borderTop: `3px solid ${perfColor}` }}>
                   <div className="metric-label">Performance Score</div>
                   <div style={{ fontSize: 64, fontWeight: 800, fontFamily: "var(--font-mono)", color: perfColor }}>{performanceScore}</div>

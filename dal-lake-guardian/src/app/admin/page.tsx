@@ -305,8 +305,8 @@ export default function AdminPortal() {
     <div style={{ minHeight: "100vh", background: "var(--bg-base)", color: "var(--text-primary)" }}>
       <SideNav role="admin" items={NAV_ITEMS} activeSection={section} onSectionChange={setSection} />
 
-      <main style={{ paddingLeft: 248, paddingTop: 60 }}>
-        <div style={{ maxWidth: 1200, margin: "0 auto", padding: "28px 28px 60px" }}>
+      <main className="portal-main">
+        <div className="portal-content">
 
           {/* ═══ OPERATIONS DASHBOARD ═══ */}
           {section === "dashboard" && (
@@ -337,7 +337,7 @@ export default function AdminPortal() {
               </div>
 
               {/* 4-Panel Operations Grid */}
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 20 }}>
+              <div className="responsive-grid-2" style={{ gap: 20 }}>
                 {/* Panel 1: AI Surveillance Wall */}
                 <div className="glass-panel" style={{ padding: 18, display: "flex", flexDirection: "column", height: 380 }}>
                   <div style={{ fontSize: 11, fontWeight: 700, fontFamily: "var(--font-mono)", letterSpacing: "0.08em", color: "var(--text-muted)", marginBottom: 12, display: "flex", alignItems: "center", gap: 6 }}>
@@ -445,7 +445,7 @@ export default function AdminPortal() {
                       <div style={{ fontWeight: 700, color: "#8B5CF6", marginBottom: 4 }}>Recommended Action</div>
                       <div style={{ fontSize: 12, fontWeight: 800 }}>Deploy Vessel 2 (Algae Harvester)</div>
                     </div>
-                    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}>
+                    <div className="responsive-grid-2" style={{ gap: 8 }}>
                       <div style={{ background: "var(--bg-void)", padding: 8, borderRadius: 6, border: "1px solid var(--border-dim)" }}>
                         <div style={{ fontSize: 8, color: "var(--text-muted)" }}>DESTINATION</div>
                         <div style={{ fontWeight: 700, color: "var(--text-primary)" }}>Hazratbal NW Shore</div>
@@ -614,7 +614,7 @@ export default function AdminPortal() {
                       </span>
                     </div>
                     
-                    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8, marginBottom: 12 }}>
+                    <div className="responsive-grid-2" style={{ gap: 8, marginBottom: 12 }}>
                       <div style={{ background: "var(--bg-void)", padding: 8, borderRadius: 6, border: "1px solid var(--border-dim)" }}>
                         <div style={{ fontSize: 8, color: "var(--text-muted)" }}>IoT SENSORS</div>
                         <div style={{ fontFamily: "var(--font-mono)", fontSize: 12, fontWeight: 700, color: "#0EA5E9" }}>18 Array Nodes</div>
@@ -658,7 +658,7 @@ export default function AdminPortal() {
                       LIVE SENSOR ARRAY (REALTIME)
                     </div>
                     
-                    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
+                    <div className="responsive-grid-2" style={{ gap: 10 }}>
                       {[
                         { name: "Turbidity", val: `${(liveSensors.turbidity * (timeSlider === 0 ? 0.9 : timeSlider === 2 ? 1.3 : timeSlider === 3 ? 1.6 : 1.0)).toFixed(1)} NTU`, color: liveSensors.turbidity > 65 ? "#EF4444" : "#10B981" },
                         { name: "Dissolved O₂", val: `${(liveSensors.do * (timeSlider === 0 ? 1.05 : timeSlider === 2 ? 0.85 : timeSlider === 3 ? 0.72 : 1.0)).toFixed(2)} mg/L`, color: liveSensors.do < 5.0 ? "#F59E0B" : "#10B981" },
@@ -780,7 +780,7 @@ export default function AdminPortal() {
               <SectionTitle title="7-Day Environmental Risk Forecast" sub="LightGBM model with real rainfall from Open-Meteo API — proactive dispatch recommendations" />
 
               {/* 7-day calendar */}
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(7, 1fr)", gap: 10 }}>
+              <div className="responsive-forecast-grid" style={{ gap: 10 }}>
                 {RISK_FORECAST.map((d) => {
                   const color = { low: "#10B981", medium: "#F59E0B", high: "#EF4444", critical: "#7F1D1D" }[d.risk] ?? "#94A3B8";
                   const isSelected = selectedDay === d.day;
@@ -1003,7 +1003,7 @@ export default function AdminPortal() {
                           );
                         })}
                       </div>
-                      <div style={{ marginTop: 16, padding: 12, background: "rgba(14,165,233,0.03)", borderRadius: 10, border: "1px solid rgba(14,165,233,0.12)", display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
+                      <div className="responsive-grid-2" style={{ marginTop: 16, padding: 12, background: "rgba(14,165,233,0.03)", borderRadius: 10, border: "1px solid rgba(14,165,233,0.12)", gap: 16 }}>
                         <div>
                           <div style={{ fontSize: 11, color: "#0EA5E9", fontWeight: 600, marginBottom: 6 }}>Weather & Runoff Impact Pipeline</div>
                           <div style={{ fontSize: 11, color: "var(--text-secondary)", lineHeight: 1.4 }}>
@@ -1082,7 +1082,7 @@ export default function AdminPortal() {
           {section === "stations" && (
             <div className="animate-fade-in" style={{ display: "flex", flexDirection: "column", gap: 20 }}>
               <SectionTitle title="Station Network" sub="5 LCMA command stations with live sector health and pending workload" />
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 16 }}>
+              <div className="responsive-grid-3" style={{ gap: 16 }}>
                 {STATION_DATA.map((sta) => {
                   const sectorHealth = SECTOR_HEALTH.find((s) => s.station === sta.id);
                   const score = sectorHealth?.score ?? 65;
@@ -1125,7 +1125,7 @@ export default function AdminPortal() {
           {section === "fleet" && (
             <div className="animate-fade-in" style={{ display: "flex", flexDirection: "column", gap: 20 }}>
               <SectionTitle title="Fleet Monitoring Centre" sub="Real-time field crew status, A* route optimization, and performance tracking" />
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 14 }}>
+              <div className="responsive-admin-fleet-grid" style={{ gap: 14 }}>
                 {workers.map((w) => (
                   <div key={w.id} className={`glass-panel ${w.suspended ? "glass-panel-danger" : ""}`} style={{ padding: 20, display: "flex", gap: 14, alignItems: "flex-start", opacity: w.suspended ? 0.6 : 1 }}>
                     <div style={{ width: 44, height: 44, borderRadius: 12, background: "rgba(14,165,233,0.08)", border: "1px solid rgba(14,165,233,0.2)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
@@ -1170,7 +1170,7 @@ export default function AdminPortal() {
           {section === "accountability" && (
             <div className="animate-fade-in" style={{ display: "flex", flexDirection: "column", gap: 20 }}>
               <SectionTitle title="Accountability Centre" sub="Worker performance tracking, culprit identification, and enforcement actions" />
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 20 }}>
+              <div className="responsive-grid-2" style={{ gap: 20 }}>
                 {/* Flagged workers */}
                 <div className="glass-panel glass-panel-danger" style={{ padding: 20 }}>
                   <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 16 }}>

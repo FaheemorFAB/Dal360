@@ -276,8 +276,8 @@ export default function CitizenPortal() {
     <div style={{ minHeight: "100vh", background: "var(--bg-base)", color: "var(--text-primary)" }}>
       <SideNav role="citizen" items={NAV_ITEMS} activeSection={section} onSectionChange={setSection} />
 
-      <main style={{ paddingLeft: 248, paddingTop: 60 }}>
-        <div style={{ maxWidth: 900, margin: "0 auto", padding: "28px 28px 60px" }}>
+      <main className="portal-main">
+        <div className="portal-content">
 
           {/* ══ REPORT POLLUTION ══════════════════════════════════════════════ */}
           {section === "report" && (
@@ -550,7 +550,7 @@ export default function CitizenPortal() {
                 </p>
               </div>
               <DalLakeMap showHeatmap showComplaints showStations height="440px" />
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 10 }}>
+              <div className="responsive-grid-4" style={{ gap: 10 }}>
                 {[
                   { label: "Active Reports",  val: "23",  color: "#EF4444" },
                   { label: "Resolved Today",  val: "18",  color: "#10B981" },
@@ -746,7 +746,7 @@ export default function CitizenPortal() {
                   <span className={`badge ${tier.class}`} style={{ marginTop: 6, display: "inline-flex" }}>{tier.badge}</span>
                 </div>
                 <div style={{ width: 1, height: 60, background: "var(--border-dim)" }} />
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px 32px", flex: 1 }}>
+                <div className="responsive-grid-2" style={{ gap: "12px 32px", flex: 1 }}>
                   {[
                     { label: "Reports Submitted",   val: "4",   icon: <ClipboardList size={13} color="#0EA5E9" /> },
                     { label: "Verified Reports",     val: "3",   icon: <ShieldCheck size={13} color="#10B981" /> },
@@ -820,7 +820,7 @@ export default function CitizenPortal() {
                 <div style={{ fontWeight: 700, fontSize: 14, marginBottom: 14, display: "flex", alignItems: "center", gap: 8 }}>
                   <Star size={16} color="#F59E0B" /> Citizen Trust System
                 </div>
-                <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 10 }}>
+                <div className="responsive-citizen-cat-grid" style={{ gap: 10 }}>
                   {[
                     { tier: "🥇 Gold Tier",   range: "80–100", perks: "Instant acceptance, priority queue", color: "#10B981" },
                     { tier: "🥈 Silver Tier", range: "50–79",  perks: "Standard AI validation",      color: "#0EA5E9" },
